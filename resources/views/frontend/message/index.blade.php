@@ -5,93 +5,75 @@
 @endsection
 
 @section('content')
-    <!-- breadcrumb start -->
-  <div class="breadcrumb-nav">
+ 
+<section class="contact section-padding" id="contact">
     <div class="container">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item active" aria-current="page">contact</li>
-        </ol>
-      </nav>
-    </div>
-  </div>
-  <!-- breadcrumb end -->
-
-  <!-- contact section start -->
-  <section class="contact-section section-padding">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="section-title">
-            <p class="sub-title">Get In Touch</p>
+      <div class="section-title">
+        <span class="title" data-aos="fade-up" data-aos-duration="600">contact us</span>
+        <h2 class="sub-title" data-aos="fade-up" data-aos-duration="600">have any question ?</h2>
+      </div>
+      <div class="grid contact-grid">
+        <div class="contact-info">
+          <div class="contact-info-item" data-aos="fade-up" data-aos-duration="600">
+            <i class="fas fa-phone"></i>
+            <h3>Call us</h3>
+            @if ($contactInfo && $contactInfo->phone)
+              <p>{!! $contactInfo->phone !!}</p>
+            @else
+              <p>No phone found.</p>
+            @endif
           </div>
-          <div class="contact-items">
-            <div class="contact-item">
-              <div class="icon-box"><i class="fas fa-map-marker-alt"></i></div>
-              <h3>Address</h3>
-              @if ($contactInfo && $contactInfo->addressDetails)
-                  <p>{!! $contactInfo->addressDetails !!}</p>
-              @else
-                  <p>No address found.</p>
-              @endif
-            </div>
-            <div class="contact-item">
-              <div class="icon-box"><i class="fas fa-phone"></i></div>
-              <h3>Phone</h3>
-              @if ($contactInfo && $contactInfo->phone)
-                  <p>{!! $contactInfo->phone !!}</p>
-              @else
-                  <p>No phone found.</p>
-              @endif
-            </div>
-            <div class="contact-item">
-              <div class="icon-box"><i class="fas fa-envelope"></i></div>
-              <h3>Email</h3>
-              @if ($contactInfo && $contactInfo->email)
-                  <p>{!! $contactInfo->email !!}</p>
-              @else
-                  <p>No email found.</p>
-              @endif
-            </div>
+          <div class="contact-info-item" data-aos="fade-up" data-aos-duration="600">
+            <i class="fas fa-envelope"></i>
+            <h3>Email us</h3>
+            @if ($contactInfo && $contactInfo->email)
+              <p>{!! $contactInfo->email !!}</p>
+            @else
+              <p>No email found.</p>
+            @endif
+          </div>
+          <div class="contact-info-item" data-aos="fade-up" data-aos-duration="600">
+            <i class="fas fa-map-marker-alt"></i>
+            <h3>Address</h3>
+            @if ($contactInfo && $contactInfo->addressDetails)
+              <p>{!! $contactInfo->addressDetails !!}</p>
+            @else
+              <p>No address found.</p>
+            @endif
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="contact-form box">
-            <h2 class="form-title text-center">Leave a Message</h2>
-            <form action="{{ route('user.send-message') }}" method="POST">
-              @csrf
-              <div class="form-group">
-                <input name="senderName" type="text" class="form-control @error('senderName') is-invalid @enderror" placeholder="Name" value="{{ old('senderName', Auth::check() ? Auth::user()->name : '') }}">
-                @error('senderName')
-                  <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-              </div>
-              <div class="form-group">
-                <input name="senderEmail" type="email" class="form-control @error('senderEmail') is-invalid @enderror" placeholder="Email" value="{{ old('senderEmail', Auth::check() ? Auth::user()->email : '') }}">
-                @error('senderEmail')
-                  <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-              </div>
-              <div class="form-group">
-                <input name="senderPhone" type="number" class="form-control @error('senderPhone') is-invalid @enderror" placeholder="Phone">
-                @error('senderPhone')
-                  <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-              </div>
-              <div class="form-group">
-                <textarea name="senderMessage" class="form-control @error('senderMessage') is-invalid @enderror" placeholder="Message"></textarea>
-                @error('senderMessage')
-                  <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-              </div>
-              <button type="submit" class="btn btn-block btn-theme btn-form">send message</button>
-            </form>
-          </div>
+        <div class="contact-form" data-aos="fade-up" data-aos-duration="600">
+          <form action="{{ route('user.send-message') }}" method="POST">
+            @csrf
+            <div class="input-box">
+              <input type="text" placeholder="Name" name="senderName" class="input-control @error('senderName') is-invalid @enderror" value="{{ old('senderName', Auth::check() ? Auth::user()->name : '') }}">
+              @error('senderName')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
+            <div class="input-box">
+              <input type="text" placeholder="Email" name="senderEmail" class="input-control @error('senderEmail') is-invalid @enderror" value="{{ old('senderEmail', Auth::check() ? Auth::user()->email : '') }}">
+              @error('senderEmail')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
+            <div class="input-box">
+              <input type="number" placeholder="Phone" name="senderPhone" class="input-control @error('senderPhone') is-invalid @enderror">
+              @error('senderPhone')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
+            <div class="input-box">
+              <textarea placeholder="Message" name="senderMessage" class="input-control @error('senderMessage') is-invalid @enderror"></textarea>
+              @error('senderMessage')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
+            <button type="submit" class="btn">Send Message</button>
+          </form>
         </div>
       </div>
     </div>
   </section>
-  <!-- contact section end -->
 
 @endsection

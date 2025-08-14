@@ -1452,3 +1452,12 @@ textarea.input-control{
 .see-more:hover {
     text-decoration: underline;
 }
+
+
+
+.invalid-feedback {
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
