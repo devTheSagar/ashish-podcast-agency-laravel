@@ -9,14 +9,14 @@
 <section class="section-padding testimonials" style="margin-top: 7vh">
   <div class="container">
     <div class="section-title">
-      <span class="title">what clients say</span>
-      <h2 class="sub-title">Testimonials</h2>
+      <span class="title" data-aos="fade-up" data-aos-duration="600">what clients say</span>
+      <h2 class="sub-title" data-aos="fade-up" data-aos-duration="600">Testimonials</h2>
     </div>
 
     <div class="grid testimonials-grid">
       @foreach ($testimonials as $testimonial)
         <!-- item -->
-        <article class="testimonial-item">
+        <article class="testimonial-item" data-aos="fade-up" data-aos-duration="600">
           <div class="t-card">
             <div class="t-head">
               <div class="t-avatar">
