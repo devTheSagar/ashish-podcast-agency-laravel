@@ -1,101 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>
-    @yield('title')
-  </title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ asset('') }}frontend/assets/css/font-awesome.css">
-  <link rel="stylesheet" href="{{ asset('') }}frontend/assets/css/bootstrap.min.css">
-  <link rel="stylesheet" href="{{ asset('') }}frontend/assets/css/style.css">
-  <link rel="stylesheet" href="{{ asset('') }}frontend/assets/css/responsive.css">
-  <link rel="stylesheet" class="js-color-style" href="{{ asset('') }}frontend/assets/css/colors/color-1.css">
-  <link rel="stylesheet" class="js-glass-style" href="{{ asset('') }}frontend/assets/css/glass.css" disabled>
-</head>
-<body>
+  <head>
+    <title> Tolmol - Cleaning Service </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link type="text/css" rel="stylesheet" href="{{ asset('') }}frontend/assets/css/fontawesome.min.css" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('') }}frontend/assets/css/aos.css" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('') }}frontend/assets/css/style-switcher.css" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('') }}frontend/assets/css/style.css" />
+  </head>
+  <body>
 
-<!-- page loader start -->
-<div class="page-loader js-page-loader">
-  <div></div>
-</div>
-<!-- page loader end -->
+    <!-- preloader start -->
+    <div class="preloader js-preloader">
+      <div></div>
+    </div>
+    <!-- preloader end -->
 
-<!-- main wrapper start -->
-<div class="main-wrapper">
-  
-  <!-- header start -->
-  <header class="header">
-    <div class="container">
-      <div class="header-main d-flex justify-content-between align-items-center">
-        <div class="header-logo">
-          <a href="{{ route('user.dashboard') }}"><span>podcast</span>rank</a>
+  <!-- page wrapper start -->
+  <div class="page-wrapper">
+
+    <!-- header start -->
+    <header class="header js-header">
+      <div class="container">
+        <div class="logo" data-aos="fade-down" data-aos-duration="1000">
+          <a href="{{ route('user.dashboard') }}">Podcast <span>Promotion</span></a>
         </div>
-        <button type="button" class="header-hamburger-btn js-header-menu-toggler">
+        <button type="button" class="nav-toggler js-nav-toggler" data-aos="fade-down" data-aos-duration="1000">
           <span></span>
         </button>
-        <div class="header-backdrop js-header-backdrop"></div>
-        <nav class="header-menu js-header-menu">
-          <button type="button" class="header-close-btn js-header-menu-toggler">
-            <i class="fas fa-times"></i>
-          </button>
-          <ul class="menu">
-            <li class="menu-item"><a href="{{ route('user.dashboard') }}">home</a></li>
-            <li class="menu-item menu-item-has-children">
-              <a href="#" class="js-toggle-sub-menu">services <i class="fas fa-chevron-down"></i></a>
-              <ul class="sub-menu js-sub-menu">
+        <nav class="nav js-nav">
+          <ul data-aos="fade-down" data-aos-duration="1000">
+            <li><a href="{{ route('user.dashboard') }}">home</a></li>
+            <li><a href="#about">about</a></li>
+
+            <!-- Dropdown for Services -->
+            <li class="dropdown">
+              <a href="#services">services</a>
+              <ul class="dropdown-menu">
                 @foreach ($services as $service)
-                  <li class="sub-menu-item">
-                    <a href="{{ route('user.service-details', ['id' => $service->id]) }}">
-                      {{ $service->serviceName }}
-                    </a>
-                  </li>
+                  <li><a href="{{ route('user.service-details', ['id' => $service->id]) }}">{{ $service->serviceName }}</a></li>
                 @endforeach
               </ul>
             </li>
-            <li class="menu-item"><a href="{{ route('user.message') }}">contact</a></li>
-            <li class="menu-item"><a href="{{ route('user.testimonials') }}">Testimonials</a></li>
-            
-            <li class="menu-item menu-item-has-children">
+
+
+            <li><a href="#pricing">pricing</a></li>
+            <li><a href="#team">team</a></li>
+            <li><a href="{{ route('user.testimonials') }}">testimonials</a></li>
+            <li><a href="{{ route('user.message') }}">contact</a></li>
+            <!-- <li><a href="#">account</a></li> -->
+            <!-- Dropdown for account -->
+            <li class="dropdown">
               @auth
-                  <a href="#" class="js-toggle-sub-menu">
-                      {{ Auth::user()->name }} <i class="fas fa-chevron-down"></i>
+                <a href="#services">{{ Auth::user()->name }}</a>
+                <ul class="dropdown-menu">
+                  <li><a href="{{ route('user.account') }}">My Account</a></li>
+                  <li><a href="{{ route('user.track-order') }}">Track Order</a></li>
+                  <li>
+                  <a href="#" 
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    Logout
                   </a>
-                  <ul class="sub-menu js-sub-menu">
-                      <li class="sub-menu-item">
-                          <a href="{{ route('user.account') }}">My Account</a>
-                      </li>
-                      <li class="sub-menu-item">
-                          <a href="{{ route('user.track-order') }}">Track Order</a>
-                      </li>
-                      <li class="sub-menu-item">
-                        <form method="POST" action="{{ route('logout.user') }}" style="margin: 0;">
-                            @csrf
-                            <button type="submit"
-                                style="background: none; border: none; padding: 0; width: 100%; text-align: left; color: #007bff; display: block; font: inherit; cursor: pointer;"
-                                class="ms-4" >
-                                Logout
-                            </button>
-                        </form>
-                    </li>
-                  </ul>
+                  <form id="logout-form" action="{{ route('logout.user') }}" method="POST" style="display: none;">
+                      @csrf
+                  </form>
+              </li>
+                </ul>
               @endauth
 
               @guest
-                  <a href="#" class="js-toggle-sub-menu">
-                      Account <i class="fas fa-chevron-down"></i>
-                  </a>
-                  <ul class="sub-menu js-sub-menu">
-                      <li class="sub-menu-item"><a href="{{ route('login') }}">Log In</a></li>
-                      <li class="sub-menu-item"><a href="{{ route('signup.user') }}">Sign Up</a></li>
-                      <li class="sub-menu-item"><a href="{{ route('user.track-order') }}">Track Order</a></li>
-                  </ul>
+                <a href="#services">Account</a>
+                <ul class="dropdown-menu">
+                  <li><a href="{{ route('login') }}">Login</a></li>
+                  <li><a href="{{ route('signup.user') }}">Sign Up</a></li>
+                  <li><a href="{{ route('user.track-order') }}">Track Order</a></li>
+                  {{-- <li><a href="my-account.html">My Account</a></li> --}}
+                </ul>
               @endguest
+              
             </li>
-
           </ul>
         </nav>
+
       </div>
-    </div>
-  </header>
+    </header>
   <!-- header end -->
