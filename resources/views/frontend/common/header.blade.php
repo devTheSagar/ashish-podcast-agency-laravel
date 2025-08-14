@@ -32,7 +32,7 @@
         <nav class="nav js-nav">
           <ul data-aos="fade-down" data-aos-duration="1000">
             <li><a href="{{ route('user.dashboard') }}">home</a></li>
-            <li><a href="#about">about</a></li>
+            {{-- <li><a href="#about">about</a></li> --}}
 
             <!-- Dropdown for Services -->
             <li class="dropdown">
@@ -45,7 +45,7 @@
             </li>
 
 
-            <li><a href="#pricing">pricing</a></li>
+            {{-- <li><a href="#pricing">pricing</a></li> --}}
             <li><a href="#team">team</a></li>
             <li><a href="{{ route('user.testimonials') }}">testimonials</a></li>
             <li><a href="{{ route('user.message') }}">contact</a></li>
