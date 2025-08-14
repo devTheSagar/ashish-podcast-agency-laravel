@@ -1165,14 +1165,28 @@ textarea.input-control{
     font-size: 18px;
   }
 
+  /* Keep the quotes inline with the text */
   .t-quote{
     margin: 0 0 12px;
     font-style: italic;
+    display: inline-block;        /* keeps before/text/after together */
+    white-space: normal !important; /* critical: prevent newline from Blade becoming <br> */
   }
-  .t-quote::before, .t-quote::after{
-    content:'“'; color: var(--main-color);
+
+  .t-quote::before,
+  .t-quote::after{
+    display: inline;
+    color: var(--main-color);
   }
-  .t-quote::after{ content:'”'; }
+
+  .t-quote::before{ content: "\201C"; margin-right: 2px; } /* “ */
+  .t-quote::after { content: "\201D"; margin-left:  2px; } /* ” */
+
+  /* Preserve author-entered line breaks INSIDE the content only */
+  .t-quote .text-content{
+    white-space: pre-line;
+    display: inline;
+  }
 
   .t-meta{
     font-size: var(--fs-sm);
@@ -1421,3 +1435,20 @@ textarea.input-control{
     .kpi{ grid-column: span 12; }
     .prof-grid .col{ grid-column: span 12; }
   }
+
+
+
+
+
+
+
+.t-quote { white-space: pre-line; margin-bottom: 0.5rem; }
+.see-more {
+    display: inline-block;
+    color: var(--main-color);
+    font-weight: 500;
+    text-decoration: none;
+}
+.see-more:hover {
+    text-decoration: underline;
+}

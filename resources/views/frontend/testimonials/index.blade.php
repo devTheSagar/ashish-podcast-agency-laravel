@@ -5,52 +5,99 @@
 @endsection
 
 @section('content')
-    <!-- breadcrumb start -->
-  <div class="breadcrumb-nav">
-    <div class="container">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Testimonials</li>
-        </ol>
-      </nav>
+
+<section class="section-padding testimonials" style="margin-top: 7vh">
+  <div class="container">
+    <div class="section-title">
+      <span class="title">what clients say</span>
+      <h2 class="sub-title">Testimonials</h2>
+    </div>
+
+    <div class="grid testimonials-grid">
+      @foreach ($testimonials as $testimonial)
+        <!-- item -->
+        <article class="testimonial-item">
+          <div class="t-card">
+            <div class="t-head">
+              <div class="t-avatar">
+                <img src="{{ $testimonial->photo ?? asset('img/review/default.png') }}" alt="{{ $testimonial->name }}">
+              </div>
+              <div class="t-id">
+                <h3>{{ $testimonial->name }}</h3>
+                <p>{{ $testimonial->designation }}</p>
+              </div>
+            </div>
+
+            <div class="t-stars" aria-label="{{ $testimonial->rating }} out of 5">
+              @php $rating = $testimonial->rating; @endphp
+              {{-- full stars --}}
+              @for ($i = 0; $i < $rating; $i++)
+                <i class="fas fa-star"></i>
+              @endfor
+              {{-- empty stars --}}
+              @for ($i = $rating; $i < 5; $i++)
+                <i class="far fa-star"></i>
+              @endfor
+            </div>
+
+            <blockquote class="t-quote" data-expanded="false">
+              @php
+                  $full  = $testimonial->testimonial;
+                  $limit = 100;
+                  $isLong = \Illuminate\Support\Str::length($full) > $limit;
+                  $short = \Illuminate\Support\Str::limit($full, $limit, '');
+              @endphp
+              <span class="text-content">{{ $isLong ? $short . '…' : $full }}</span>
+            </blockquote>
+
+
+            @if($isLong)
+                <a href="#" class="see-more" 
+                  data-full="{{ $full }}" 
+                  data-short="{{ $short . '…' }}">
+                  See more
+                </a>
+            @endif
+
+            <div class="t-meta">
+              <span>{{ $testimonial->date }}</span>
+            </div>
+          </div>
+        </article>
+        <!-- /item -->
+      @endforeach
+    </div>
+
+    <!-- optional CTA -->
+    <div class="t-cta">
+      <a href="{{ route('user.message') }}" class="btn">work with us</a>
     </div>
   </div>
-  <!-- breadcrumb end -->
+</section>
 
-  <!-- contact section start -->
-  <section class="contact-section section-padding">
-    <div class="container">
-      <div class="row">
-        @foreach ($testimonials as $testimonial)
-            <div class="col-md-6 mb-5">
-                <span>{{ $testimonial->date }}</span>
-                <p class="m-0 p-0">{{ $testimonial->name }}</p>
-                <p>{{ $testimonial->designation }}</p>
-                {{-- showing stars  --}}
-                <span class="average-stars">
-                    @php
-                        $rating = $testimonial->rating;
-                    @endphp
 
-                    {{-- Show full stars --}}
-                    @for ($i = 0; $i < $rating; $i++)
-                        <i class="fas fa-star"></i>
-                    @endfor
+{{-- for see more/see less functionality  --}}
+<script>
+  document.addEventListener('click', function(e){
+      const link = e.target.closest('.see-more');
+      if(!link) return;
 
-                    {{-- Show empty stars for the rest --}}
-                    @for ($i = $rating; $i < 5; $i++)
-                        <i class="far fa-star"></i>
-                    @endfor
-                </span>
+      e.preventDefault();
+      const bq = link.previousElementSibling; // blockquote before the link
+      const textEl = bq.querySelector('.text-content');
+      const expanded = bq.getAttribute('data-expanded') === 'true';
 
-                <p>{{ $testimonial->testimonial }}</p>
-                <p></p>
-            </div>
-        @endforeach
-      </div>
-    </div>
-  </section>
-  <!-- contact section end -->
+      if(expanded){
+          textEl.textContent = link.dataset.short;
+          bq.setAttribute('data-expanded', 'false');
+          link.textContent = "See more";
+      } else {
+          textEl.textContent = link.dataset.full;
+          bq.setAttribute('data-expanded', 'true');
+          link.textContent = "See less";
+      }
+  });
+</script>
+
 
 @endsection
