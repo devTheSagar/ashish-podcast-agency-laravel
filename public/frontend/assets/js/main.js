@@ -29,26 +29,75 @@ headerBg();
 
 /* nav */ 
 
-const navigation = () => {
-    const navToggler = document.querySelector(".js-nav-toggler");
-    const nav = document.querySelector(".js-nav");
-    const navItems = nav.querySelectorAll("li");
-    
-    const navToggle = () => {
-       nav.classList.toggle("open");
-       navToggler.classList.toggle("active");
+/* nav */
+(function navigation(){
+  const navToggler = document.querySelector(".js-nav-toggler");
+  const nav = document.querySelector(".js-nav");
+  if (!nav || !navToggler) return;
+
+  const isMobile = () => window.innerWidth <= 767;
+
+  const openNav = () => {
+    nav.classList.add("open");
+    navToggler.classList.add("active");
+  };
+  const closeNav = () => {
+    nav.classList.remove("open");
+    navToggler.classList.remove("active");
+    // collapse any open mobile dropdowns
+    nav.querySelectorAll(".dropdown.open").forEach(li => li.classList.remove("open"));
+  };
+  const toggleNav = () => (nav.classList.contains("open") ? closeNav() : openNav());
+
+  // burger button
+  navToggler.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleNav();
+  });
+
+  // delegate taps inside the nav
+  nav.addEventListener("click", (e) => {
+    const link = e.target.closest("a");
+    if (!link) return;
+
+    const li = link.closest("li");
+    const isDropdownParent = li?.classList.contains("dropdown") && link.parentElement === li;
+    const inSubmenu = !!link.closest(".dropdown-menu");
+
+    // MOBILE: tapping dropdown label toggles submenu (do NOT close drawer)
+    if (isMobile() && isDropdownParent) {
+      e.preventDefault();           // don’t navigate on the label
+      e.stopPropagation();
+
+      // (optional) close other open dropdowns
+      li.parentElement.querySelectorAll(".dropdown.open").forEach(el => {
+        if (el !== li) el.classList.remove("open");
+      });
+
+      li.classList.toggle("open");  // second tap closes it
+      return;
     }
 
-    navToggler.addEventListener("click", navToggle);
+    // MOBILE: tapping a submenu item closes the drawer (allow navigation)
+    if (isMobile() && inSubmenu) {
+      closeNav();
+      return;
+    }
 
-    navItems.forEach((li) => {
-      li.querySelector("a").addEventListener("click", () => {
-         if(window.innerWidth <= 767){
-           navToggle();
-         }
-      });
-    });
-}
-navigation();
+    // MOBILE: tapping a regular top-level link closes the drawer
+    if (isMobile() && !isDropdownParent) {
+      closeNav();
+    }
+  });
 
+  // click outside closes drawer (mobile)
+  document.addEventListener("click", (e) => {
+    if (!isMobile()) return;
+    if (!nav.contains(e.target) && !navToggler.contains(e.target)) closeNav();
+  });
 
+  // on resize, reset mobile states when going desktop
+  window.addEventListener("resize", () => {
+    if (!isMobile()) closeNav();
+  });
+})();
