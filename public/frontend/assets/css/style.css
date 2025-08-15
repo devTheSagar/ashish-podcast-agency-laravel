@@ -1496,3 +1496,73 @@ textarea.input-control{
     color: var(--main-color);
   }
 }
+
+
+
+/* Only show reviews the JS paints */
+#reviewsList .review { display: none; }
+
+/* Reviews filter — compact row (no wrapper needed) */
+.rf-row{
+  display: inline-flex !important;   /* shrink-to-fit instead of 100% width */
+  align-items: center;
+  gap: 12px;
+  width: max-content;                /* size to content */
+  max-width: 100%;                   /* don't overflow parent */
+  margin-bottom: 5vh;
+}
+
+.rf-row .pane-title{
+  margin: 0;
+  text-transform: capitalize;
+  white-space: nowrap;               /* keep "reviews" on one line */
+}
+
+/* Keep the form compact */
+.rf-row .rf-form{
+  display: flex;                     /* avoid block-width behavior */
+  margin: 0;
+}
+
+/* Compact select */
+.rf-row .select-wrap{
+  position: relative;
+  width: 160px;                      /* dropdown width */
+  min-width: 140px;
+}
+.rf-row .input-control{
+  width: 100%;
+  height: 50px;                      /* matches your theme inputs */
+  padding-right: 44px;               /* space for chevron */
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.rf-row .input-control:focus{
+  box-shadow: var(--focus-shadow);
+}
+
+/* Chevron icon */
+.rf-row .chev{
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 16px;
+  color: var(--text-x-dark-gray);
+}
+.rf-row .chev::before{ content: "▾"; }
+
+/* Mobile: let it stretch nicely */
+@media (max-width: 575px){
+  .rf-row{
+    display: grid !important;
+    width: 100%;
+  }
+  .rf-row .select-wrap{
+    width: 100%;
+    min-width: 0;
+  }
+}
