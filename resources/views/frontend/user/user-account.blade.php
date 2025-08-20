@@ -58,8 +58,8 @@
         {{-- Overview --}}
         <div id="pane-overview" class="apane active">
           <div class="card">
-            <h3 class="pane-title">Welcome back 👋</h3>
-            <p class="muted">Manage your orders, billing and account preferences from here.</p>
+            <h3 class="pane-title">Welcome back {{ Auth::user()->name }}</h3>
+            <p class="muted">Manage your orders and account preferences from here.</p>
             <div class="grid kpi-grid mt-10">
               <div class="kpi">
                 <span class="kpi-label">Total Orders</span>
