@@ -2,4 +2,4 @@
 
 <p>{!! nl2br(e($bodyContent)) !!}</p>
 
-<p>Best regards,<br>PodcastRank.net</p>
+<p>Best regards,<br>PodcastPromotion.online</p>

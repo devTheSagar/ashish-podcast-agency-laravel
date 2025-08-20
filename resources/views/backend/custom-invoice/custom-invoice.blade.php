@@ -4,6 +4,44 @@
     <meta charset="UTF-8" />
     <title>Invoice #{{ $invoice->id }}</title>
     <style>
+        /* define the vars you used OR just use hex in .note (see next block) */
+        :root{
+        --line: #e5e7eb;
+        --muted: #6b7280;
+        }
+
+        /* avoid float issues by not floating the totals table */
+        .totals-table{
+        width: 250px;
+        margin: 10px 0 0 auto;  /* pushes it to the right */
+        border: none;
+        float: none;            /* <-- was float:right */
+        }
+
+        /* make the note show and sit below totals */
+        .note{
+        text-align: center;
+        clear: both;            /* ensures it appears under totals */
+        margin-top: 16px;
+        padding-top: 8px;
+        border-top: 1px dashed var(--line); /* or #e5e7eb */
+        color: var(--muted);                 /* or #6b7280 */
+        font-size: 10px;
+        }
+
+        /* OPTIONAL: keep the note pinned at the bottom of printed page */
+        @media print{
+            .note{
+                text-align: center;
+                margin-top: 10px;
+                position: fixed;
+                bottom: 10mm;
+                left: 14mm;
+                right: 14mm;
+                background: #fff;
+            }
+        }
+
         body {
             font-family: Arial, sans-serif;
             line-height: 1.4;
@@ -84,10 +122,12 @@
     </style>
 </head>
 <body>
-    <div class="watermark">podcastranker.net</div>
+    <div>
+        <div class="watermark">PodcastPromotion.online</div>
 
     <div class="header">
         <h1>Invoice #{{ $invoice->id }}</h1>
+        <p>PodcastPromotion.online</p>
         <p><strong>Order Date:</strong> {{ $invoice->created_at->format('d M Y') }}</p>
     </div>
 
@@ -120,5 +160,7 @@
         <tr><th>Payment Due:</th><td>${{ number_format(($invoice->price + $invoice->tips - $invoice->amountPaid), 2) }}</td></tr>
         <tr><th class="grand-total">Total Amount:</th><td class="grand-total">${{ number_format(($invoice->price + $invoice->tips), 2) }}</td></tr>
     </table>
+    </div>
+    <p class="note"> This is a system-generated invoice from PodcastPromotion.online. If you have any questions, please contact support.</p>
 </body>
 </html>

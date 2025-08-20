@@ -15,6 +15,6 @@
         <p>If you have any questions, feel free to contact us.</p>
 
         <p>Best regards,<br>
-        Podcastranker.net Team</p>
+        PodcastPromotion.online Team</p>
     </body>
 </html>
