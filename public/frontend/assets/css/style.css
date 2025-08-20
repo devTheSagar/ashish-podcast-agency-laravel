@@ -1566,3 +1566,39 @@ textarea.input-control{
     min-width: 0;
   }
 }
+
+
+
+
+/* About Us layout */
+.aboutus-grid { grid-template-columns: repeat(12, 1fr); gap: 30px; align-items: start; }
+.aboutus-content { grid-column: span 8; }
+.aboutus-media   { grid-column: span 4; }
+
+.aboutus-media .img-wrap{
+  background: var(--bg-color);
+  box-shadow: var(--shadow);
+  border-radius: 12px;
+  padding: 12px;
+}
+.aboutus-media img{ display:block; width:100%; border-radius:10px; }
+
+/* Alternate rows (even items = image left, text right) */
+.aboutus-grid.is-reverse { /* swap order by DOM order change on small screens only if needed */ }
+@media (min-width: 768px){
+  .aboutus-grid.is-reverse .aboutus-content{ order: 2; }
+  .aboutus-grid.is-reverse .aboutus-media{ order: 1; }
+}
+
+/* Rich content typography */
+.rich h2, .rich h3{ margin: 0 0 10px; }
+.rich p{ margin: 0 0 12px; }
+.rich ul{ list-style: disc; margin: 0 0 12px 20px; }
+.rich ol{ margin: 0 0 12px 20px; }
+.rich a{ color: var(--main-color); text-decoration: underline; }
+
+/* Responsive */
+@media (max-width: 767px){
+  .aboutus-content, .aboutus-media{ grid-column: span 12; }
+  .aboutus-media{ order: -1; margin-bottom: 12px; } /* image on top for mobile */
+}

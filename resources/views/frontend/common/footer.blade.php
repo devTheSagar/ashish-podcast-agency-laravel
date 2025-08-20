@@ -7,9 +7,9 @@
       <div class="footer-col">
         <h3>About Us</h3>
         <ul>
-          <li><a href="#">About Company</a></li>
+          <li><a href="{{ route('user.about-us') }}">About Company</a></li>
           <li><a href="#">Team</a></li>
-          <li><a href="#">Testimonials</a></li>
+          <li><a href="{{ route('user.testimonials') }}">Testimonials</a></li>
         </ul>
       </div>
 
@@ -17,9 +17,9 @@
       <div class="footer-col">
         <h3>What We Offer</h3>
         <ul>
-          <li><a href="#">Pricing</a></li>
+          <li><a href="{{ route('user.pricing') }}">Pricing</a></li>
           <li><a href="#">Blog</a></li>
-          <li><a href="#">FAQ</a></li>
+          <li><a href="{{ route('user.faqs') }}">FAQ</a></li>
         </ul>
       </div>
 
@@ -27,9 +27,9 @@
       <div class="footer-col">
         <h3>Support</h3>
         <ul>
-          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="{{ route('user.privacy-policy') }}">Privacy Policy</a></li>
           <li><a href="#">Get the App</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="{{ route('user.message') }}">Contact</a></li>
         </ul>
       </div>
 

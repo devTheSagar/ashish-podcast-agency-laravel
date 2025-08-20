@@ -5,36 +5,36 @@
 @endsection
 
 @section('content')
-    <!-- breadcrumb start -->
-  <div class="breadcrumb-nav">
-    <div class="container">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item active" aria-current="page">About Us</li>
-        </ol>
-      </nav>
-    </div>
-  </div>
-  <!-- breadcrumb end -->
 
-  <!-- content start  -->
+<section class="section-padding aboutus">
   <div class="container">
-    <div class="row">
-        <div class="col-lg-12">
-            <h1 class="mb-4">About Us</h1>
-            <div class="row">
-                @foreach ($aboutUs as $aboutUs)
-                <div class="col-lg-8">
-                    <p>{!! $aboutUs->aboutUsDetails !!}</p>
-                </div>
-                <div class="col-lg-4">
-                    <img src="{{ $aboutUs->aboutUsImage }}" alt="About Us" class="img-fluid">
-                </div>
-                @endforeach
-            </div>
-        </div>
+    <div class="section-title">
+      <span class="title">who we are</span>
+      <h2 class="sub-title">About Us</h2>
     </div>
+
+    @forelse ($aboutUs as $item)
+      <div class="grid aboutus-grid {{ $loop->even ? 'is-reverse' : '' }}">
+        {{-- Text --}}
+        <div class="aboutus-content card">
+          <div class="rich">
+            {!! $item->aboutUsDetails !!}
+          </div>
+        </div>
+
+        {{-- Image --}}
+        <div class="aboutus-media">
+          <div class="img-wrap">
+            <img src="{{ $item->aboutUsImage }}" alt="About Us" loading="lazy">
+          </div>
+        </div>
+      </div>
+    @empty
+      <div class="card">
+        <p>No content found.</p>
+      </div>
+    @endforelse
   </div>
-  <!-- content end  -->
+</section>
+
 @endsection
