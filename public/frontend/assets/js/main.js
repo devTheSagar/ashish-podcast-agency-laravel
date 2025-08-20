@@ -101,3 +101,87 @@ headerBg();
     if (!isMobile()) closeNav();
   });
 })();
+
+
+
+(function(){
+    const pw = document.getElementById('password');
+    const btn = document.querySelector('.pw-toggle');
+    if (pw && btn){
+      btn.addEventListener('click', ()=>{
+        const isHidden = pw.getAttribute('type') === 'password';
+        pw.setAttribute('type', isHidden ? 'text' : 'password');
+        btn.textContent = isHidden ? 'Hide' : 'Show';
+        btn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+      });
+    }
+  })();
+
+
+  (function(){
+    // Toggle password visibility
+    document.querySelectorAll('.pw-toggle').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = btn.getAttribute('data-target');
+        const input = document.getElementById(id);
+        if(!input) return;
+        const isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+        btn.textContent = isHidden ? 'Hide' : 'Show';
+        btn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+      });
+    });
+
+    // Very simple strength checker
+    const pw = document.getElementById('su-password');
+    const bars = Array.from(document.querySelectorAll('#pwStrength .bar'));
+    const label = document.querySelector('#pwStrength .label');
+    const conf = document.getElementById('su-confirm');
+    const hint = document.getElementById('matchHint');
+
+    function scorePassword(val){
+      let score = 0;
+      if(!val) return 0;
+      if(val.length >= 6) score++;
+      if(/[A-Z]/.test(val)) score++;
+      if(/[0-9]/.test(val)) score++;
+      if(/[^A-Za-z0-9]/.test(val)) score++;
+      return Math.min(score, 4);
+    }
+
+    function updateStrength(){
+      const s = scorePassword(pw.value);
+      bars.forEach((b,i)=> b.classList.toggle('on', i < s));
+      const text = ['Very weak','Weak','Good','Strong','Strong'][s] || '—';
+      label.textContent = 'Strength: ' + text;
+    }
+
+    function checkMatch(){
+      if(!conf.value) { hint.textContent = ''; return; }
+      if(pw.value === conf.value){
+        hint.style.color = 'green';
+        hint.textContent = 'Passwords match';
+      }else{
+        hint.style.color = 'crimson';
+        hint.textContent = 'Passwords do not match';
+      }
+    }
+
+    if(pw){ pw.addEventListener('input', ()=>{ updateStrength(); checkMatch(); }); }
+    if(conf){ conf.addEventListener('input', checkMatch); }
+
+    // basic submit guard
+    const form = document.getElementById('signupForm');
+    if(form){
+      form.addEventListener('submit', (e)=>{
+        if(pw.value !== conf.value){
+          e.preventDefault();
+          conf.focus();
+          hint.style.color = 'crimson';
+          hint.textContent = 'Passwords do not match';
+        }
+      });
+    }
+
+    updateStrength();
+  })();
