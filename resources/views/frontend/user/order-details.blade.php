@@ -5,64 +5,90 @@
 @endsection
 
 @section('content')
-    <!-- breadcrumb start -->
-  <div class="breadcrumb-nav">
-    <div class="container">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Track Order</li>
-        </ol>
-      </nav>
-    </div>
-  </div>
-  <!-- breadcrumb end -->
 
-  <!-- content start  -->
-  <div class="container mb-5">
-    <div class="row mt-5">
-        <div class="col-lg-12">
-            <h5>Orders</h5>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr>
-                            <td>Odrder Date</td>
-                            <td>{{ $order->created_at->timezone('Asia/Dhaka')->format('d M, Y') }}</td>
-                        </tr>
-                        <tr>
-                            <td>Delivery Date</td>
-                            <td>{{ $order->created_at->copy()->addDays($order->plan->planDuration)->timezone('Asia/Dhaka')->format('d M, Y ') }}</td>
-                        </tr>
-                        <tr>
-                            <td>Status</td>
-                            <td>{{ $order->status }}</td>
-                        </tr>
-                        <tr>
-                            <td>Transaction Id</td>
-                            <td>{{ $order->transactionId }}</td>
-                        </tr>
-                        <tr>
-                            <td>Plan</td>
-                            <td>{{ $order->plan->service->serviceName }} {{ $order->plan->planName }} Plan</td>
-                        </tr>
-                        <tr>
-                            <td>Link</td>
-                            <td><a href="{{ $order->link }}" target="_blank">{{ $order->link }}</a></td>
-                        </tr>
-                        <tr>
-                            <td>Targated Countries</td>
-                            <td>{{ $order->country }}</td>
-                        </tr>
-                        <tr>
-                            <td>Additional Text</td>
-                            <td>{{ $order->additionalText }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<section class="section-padding">
+  <div class="container" style="margin-top: 5vh">
+    <div class="card">
+      @php
+        $serviceName  = data_get($order, 'plan.service.serviceName', '—');
+        $planName     = data_get($order, 'plan.planName', '—');
+        $planPrice    = data_get($order, 'plan.planPrice', 0);
+        $planDuration = (int) data_get($order, 'plan.planDuration', 0);
+
+        $statusKey  = strtolower($order->status ?? '');
+        $statusText = ucfirst($order->status ?? '—');
+        $badgeClass = match($statusKey){
+          'pending','processing'   => 'warning',
+          'delivered','completed'  => 'success',
+          'cancelled','failed'     => 'danger',
+          default                  => ''
+        };
+
+        $orderDate    = optional($order->created_at)?->timezone('Asia/Dhaka')->format('d M, Y');
+        $deliveryDate = optional($order->created_at)
+                          ? $order->created_at->copy()->addDays($planDuration)->timezone('Asia/Dhaka')->format('d M, Y')
+                          : '—';
+      @endphp
+
+      <h3 class="pane-title" style="display:flex; align-items:center; gap:10px;">
+        Order Details
+        <span class="badge {{ $badgeClass }}">{{ $statusText }}</span>
+      </h3>
+
+      <div class="table-wrap mt-10">
+        <table class="table">
+          <tbody>
+            <tr>
+              <th style="width:240px;">Order Date</th>
+              <td>{{ $orderDate }}</td>
+            </tr>
+            <tr>
+              <th>Delivery Date</th>
+              <td>{{ $deliveryDate }}</td>
+            </tr>
+            <tr>
+              <th>Status</th>
+              <td><span class="badge {{ $badgeClass }}">{{ $statusText }}</span></td>
+            </tr>
+            <tr>
+              <th>Transaction ID</th>
+              <td>{{ $order->transactionId ?? '—' }}</td>
+            </tr>
+            <tr>
+              <th>Plan</th>
+              <td>{{ $serviceName }} — {{ $planName }} Plan</td>
+            </tr>
+            <tr>
+              <th>Price</th>
+              <td>${{ number_format($planPrice, 2) }} for {{ $planDuration }} days</td>
+            </tr>
+            <tr>
+              <th>Link</th>
+              <td>
+                @if(!empty($order->link))
+                  <a href="{{ $order->link }}" class="table-link" target="_blank" rel="noopener">{{ $order->link }}</a>
+                @else
+                  —
+                @endif
+              </td>
+            </tr>
+            <tr>
+              <th>Targeted Countries</th>
+              <td>{{ $order->country ?: '—' }}</td>
+            </tr>
+            <tr>
+              <th>Additional Text</th>
+              <td>{{ $order->additionalText ?: '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-10">
+        <a href="{{ route('user.track-order') }}" class="btn btn-light">Back to Orders</a>
+      </div>
     </div>
   </div>
-  <!-- content end  -->
+</section>
+
 @endsection
