@@ -37,11 +37,37 @@
       <div class="footer-col">
         <h3>Follow Us</h3>
         <div class="social-links">
-          <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
-          <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-          <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
-        </div>
+  @if(!empty($socialLinks?->facebookLink))
+    <a href="{{ $socialLinks->facebookLink }}" target="_blank" rel="noopener" title="Facebook" aria-label="Facebook">
+      <i class="fab fa-facebook-f"></i>
+    </a>
+  @endif
+
+  @if(!empty($socialLinks?->twitterLink))
+    <a href="{{ $socialLinks->twitterLink }}" target="_blank" rel="noopener" title="Twitter" aria-label="Twitter">
+      <i class="fab fa-twitter"></i>
+    </a>
+  @endif
+
+  @if(!empty($socialLinks?->instagramLink))
+    <a href="{{ $socialLinks->instagramLink }}" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
+      <i class="fab fa-instagram"></i>
+    </a>
+  @endif
+
+  @if(!empty($socialLinks?->youtubeLink))
+    <a href="{{ $socialLinks->youtubeLink }}" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>
+  @endif
+
+  @if(!empty($socialLinks?->linkedinLink))
+    <a href="{{ $socialLinks->linkedinLink }}" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+  @endif
+</div>
+
       </div>
     </div>
   </div>
