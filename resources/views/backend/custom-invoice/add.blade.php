@@ -70,7 +70,7 @@
                                 <div class="form-row">
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
                                         <label for="features">Features</label>
-                                        <textarea name="features" type="text" class="form-control @error('features') is-invalid @enderror" value="{{ old('features') }}" id="country" required></textarea>
+                                        <textarea name="features" type="text" class="form-control @error('features') is-invalid @enderror" id="country" required>{{ old('features') }}</textarea>
                                         @error('features')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -88,7 +88,7 @@
                                 <div class="form-row">
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
                                         <label for="country">Targated Country</label>
-                                        <textarea name="country" type="text" class="form-control @error('country') is-invalid @enderror" value="{{ old('country') }}" id="country" required></textarea>
+                                        <textarea name="country" type="text" class="form-control @error('country') is-invalid @enderror" id="country" required>{{ old('country') }}</textarea>
                                         @error('country')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror

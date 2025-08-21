@@ -19,6 +19,27 @@ class CustomInvoiceController extends Controller
     }
 
     public function store(Request $request){
+        $request->validate([
+            'serviceName'   => 'required|string|max:150',
+            'price'         => 'required|numeric|min:0|max:9999999999.99',
+            'duration'      => 'nullable|string|max:50',
+            'features'      => 'nullable|string',
+            'link'          => 'nullable|url|max:2048',
+            'country'       => 'nullable|string|max:1000',
+            'clientName'    => 'required|string|max:120',
+            'clientEmail'   => 'nullable|email|max:191',
+            'clientPhone'   => 'nullable|string|max:30',
+            'paymentMethod' => 'nullable|string|max:50',
+            'transactionId' => 'nullable|string|max:100',
+            'amountPaid'    => 'required|numeric|min:0|max:9999999999.99',
+            'tips'          => 'nullable|numeric|min:0|max:9999999999.99',
+        ], [
+            'serviceName.required' => 'Service name is required.',
+            'serviceName.max'      => 'Service name must not be greater than 150 characters.',
+            'clientEmail.email'    => 'Please enter a valid email address.',
+            'link.url'             => 'Please enter a valid URL.',
+        ]);
+        
         $invoice = CustomInvoice::createCustomInvoice($request);
 
         // Store invoice id in session to use for downloading PDF
@@ -60,6 +81,27 @@ class CustomInvoiceController extends Controller
     }
 
     public function update(Request $request, $id){
+        $request->validate([
+            'serviceName'   => 'required|string|max:150',
+            'price'         => 'required|numeric|min:0|max:9999999999.99',
+            'duration'      => 'nullable|string|max:50',
+            'features'      => 'nullable|string',
+            'link'          => 'nullable|url|max:2048',
+            'country'       => 'nullable|string|max:1000',
+            'clientName'    => 'required|string|max:120',
+            'clientEmail'   => 'nullable|email|max:191',
+            'clientPhone'   => 'nullable|string|max:30',
+            'paymentMethod' => 'nullable|string|max:50',
+            'transactionId' => 'nullable|string|max:100',
+            'amountPaid'    => 'required|numeric|min:0|max:9999999999.99',
+            'tips'          => 'nullable|numeric|min:0|max:9999999999.99',
+        ], [
+            'serviceName.required' => 'Service name is required.',
+            'serviceName.max'      => 'Service name must not be greater than 150 characters.',
+            'clientEmail.email'    => 'Please enter a valid email address.',
+            'link.url'             => 'Please enter a valid URL.',
+        ]);
+
         $customInvoice = CustomInvoice::updateCustomInvoice($id, $request);
 
         // Store invoice id in session to use for downloading PDF

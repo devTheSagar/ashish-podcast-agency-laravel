@@ -14,21 +14,21 @@ return new class extends Migration
         Schema::create('custom_invoices', function (Blueprint $table) {
             $table->id();
 
-            $table->string('serviceName');
-            $table->integer('price');
-            $table->string('duration');
-            $table->longText('features');
-            $table->longText('link');
-            $table->text('country');
+            $table->string('serviceName')->nullable();
+            $table->integer('price')->nullable();
+            $table->string('duration')->nullable();
+            $table->longText('features')->nullable();
+            $table->longText('link')->nullable();
+            $table->text('country')->nullable();
             
-            $table->string('clientName');
-            $table->string('clientEmail');
-            $table->string('clientPhone');
+            $table->string('clientName')->nullable();
+            $table->string('clientEmail')->nullable();
+            $table->string('clientPhone')->nullable();
 
-            $table->string('paymentMethod');
-            $table->text('transactionId');
-            $table->integer('amountPaid');
-            $table->integer('tips');
+            $table->string('paymentMethod')->nullable();
+            $table->text('transactionId')->nullable();
+            $table->integer('amountPaid')->nullable();
+            $table->integer('tips')->nullable();
 
             $table->timestamps();
         });
