@@ -1,7 +1,7 @@
 @extends('frontend.master')
 
 @section('title')
-    Faq
+    FAQ
 @endsection
 
 @section('content')

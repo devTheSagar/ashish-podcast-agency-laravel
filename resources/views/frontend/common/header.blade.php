@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title> Tolmol - Cleaning Service </title>
+    <title>Podcast Growth | @yield('title')</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" rel="stylesheet" href="{{ asset('') }}frontend/assets/css/fontawesome.min.css" />
@@ -24,7 +24,7 @@
     <header class="header js-header">
       <div class="container">
         <div class="logo" data-aos="fade-down" data-aos-duration="1000">
-          <a href="{{ route('user.dashboard') }}">Podcast <span>Promotion</span></a>
+          <a href="{{ route('user.dashboard') }}">Podcast Growth<span>Agency</span></a>
         </div>
         <button type="button" class="nav-toggler js-nav-toggler" data-aos="fade-down" data-aos-duration="1000">
           <span></span>

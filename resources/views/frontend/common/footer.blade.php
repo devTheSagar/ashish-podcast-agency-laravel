@@ -75,7 +75,7 @@
   </div>
 </footer>
 <div class="footer-bottom" style="margin-top: 2vh; margin-bottom: 0px; text-align: center;">
-  <p>&copy; {{ date('Y') }} PodcastPromotion.online. All Rights Reserved. Developed by <a href="https://devsagar.online" target="_blank">Avijit Sagar</a></p>
+  <p>&copy; {{ date('Y') }} PodcastGrowth.agency All Rights Reserved. Developed by <a href="https://devsagar.online" target="_blank">Avijit Sagar</a></p>
 </div>
   <!-- footer end -->
 </div>

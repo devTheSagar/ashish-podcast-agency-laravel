@@ -1,7 +1,7 @@
 @extends('frontend.master')
 
 @section('title')
-  Podcast Promotion
+  Home
 @endsection
 
 @section('content')
