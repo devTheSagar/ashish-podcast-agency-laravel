@@ -3,7 +3,7 @@
                 <div class="container">
                     <div class="row align-items-center flex-row-reverse">
                         <div class="col-md-12 col-sm-12 text-center">
-                            Copyright © 2025 <a href="#">Podcast Rank </a>All rights reserved. Developed with <span class="fa fa-heart text-danger"></span> by <a href="https://devsagar.online/" target="_blank"> Avijit Sagar </a>
+                            Copyright © 2025 <a href="#">PodcastPromotion.online </a>All rights reserved. Developed with <span class="fa fa-heart text-danger"></span> by <a href="https://devsagar.online/" target="_blank"> Avijit Sagar </a>
                         </div>
                     </div>
                 </div>

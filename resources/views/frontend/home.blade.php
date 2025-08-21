@@ -11,8 +11,8 @@
     <div class="container">
       <div class="grid">
         <div class="home-text">
-          <h1 data-aos="fade-up" data-aos-duration="1000">need cleaning services ? </h1>
-          <p data-aos="fade-up" data-aos-duration="1000" data-aos-delay="150">Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis eligendi dolore ipsa corporis, provident facere.</p>
+          <h1 data-aos="fade-up" data-aos-duration="1000">Need podcast promotion services?</h1>
+          <p data-aos="fade-up" data-aos-duration="1000" data-aos-delay="150">Grow your show with proven strategies that boost downloads, traffic, and audience engagement. We help podcasters reach more listeners, climb the charts, and unlock monetization opportunities.</p>
           <div class="btn-wrap" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
             <a href="#about" class="btn">know more</a>
           </div>
@@ -44,10 +44,10 @@
         <div class="about-text">
           <div class="section-title">
             <span class="title" data-aos="fade-up" data-aos-duration="600">about us</span>
-            <h2 class="sub-title" data-aos="fade-up" data-aos-duration="600">we're cleaning since 2010</h2>
+            <h2 class="sub-title" data-aos="fade-up" data-aos-duration="600">Promoting Podcasts Since 2015</h2>
           </div>
-          <p data-aos="fade-up" data-aos-duration="600">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Odit non eius a assumenda! Nostrum exercitationem commodi itaque sed ullam totam!</p>
-          <p data-aos="fade-up" data-aos-duration="600">Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem cumque accusantium commodi laudantium sapiente beatae, praesentium perspiciatis ex aperiam sunt?</p>
+          <p data-aos="fade-up" data-aos-duration="600">We’ve been helping podcasters grow their audience, boost downloads, and achieve top chart rankings with proven marketing strategies. Our goal is simple: connect your podcast with the right listeners and help you build long-term success.</p>
+          <p data-aos="fade-up" data-aos-duration="600">With years of experience in podcast promotion, we specialize in increasing visibility, driving engagement, and opening the door to monetization opportunities. Let us take your show to the next level while you focus on creating great content.</p>
         </div>
       </div>
     </div>

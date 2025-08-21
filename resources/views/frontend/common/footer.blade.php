@@ -37,41 +37,46 @@
       <div class="footer-col">
         <h3>Follow Us</h3>
         <div class="social-links">
-  @if(!empty($socialLinks?->facebookLink))
-    <a href="{{ $socialLinks->facebookLink }}" target="_blank" rel="noopener" title="Facebook" aria-label="Facebook">
-      <i class="fab fa-facebook-f"></i>
-    </a>
-  @endif
+          @if(!empty($socialLinks?->facebookLink))
+            <a href="{{ $socialLinks->facebookLink }}" target="_blank" rel="noopener" title="Facebook" aria-label="Facebook">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+          @endif
 
-  @if(!empty($socialLinks?->twitterLink))
-    <a href="{{ $socialLinks->twitterLink }}" target="_blank" rel="noopener" title="Twitter" aria-label="Twitter">
-      <i class="fab fa-twitter"></i>
-    </a>
-  @endif
+          @if(!empty($socialLinks?->twitterLink))
+            <a href="{{ $socialLinks->twitterLink }}" target="_blank" rel="noopener" title="Twitter" aria-label="Twitter">
+              <i class="fab fa-twitter"></i>
+            </a>
+          @endif
 
-  @if(!empty($socialLinks?->instagramLink))
-    <a href="{{ $socialLinks->instagramLink }}" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
-      <i class="fab fa-instagram"></i>
-    </a>
-  @endif
+          @if(!empty($socialLinks?->instagramLink))
+            <a href="{{ $socialLinks->instagramLink }}" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+          @endif
 
-  @if(!empty($socialLinks?->youtubeLink))
-    <a href="{{ $socialLinks->youtubeLink }}" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube">
-      <i class="fab fa-youtube"></i>
-    </a>
-  @endif
+          @if(!empty($socialLinks?->youtubeLink))
+            <a href="{{ $socialLinks->youtubeLink }}" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube">
+              <i class="fab fa-youtube"></i>
+            </a>
+          @endif
 
-  @if(!empty($socialLinks?->linkedinLink))
-    <a href="{{ $socialLinks->linkedinLink }}" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">
-      <i class="fab fa-linkedin"></i>
-    </a>
-  @endif
-</div>
+          @if(!empty($socialLinks?->linkedinLink))
+            <a href="{{ $socialLinks->linkedinLink }}" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">
+              <i class="fab fa-linkedin"></i>
+            </a>
+          @endif
+        </div>
 
       </div>
     </div>
+    <!-- Copyright -->
+    
   </div>
 </footer>
+<div class="footer-bottom" style="margin-top: 2vh; margin-bottom: 0px; text-align: center;">
+  <p>&copy; {{ date('Y') }} PodcastPromotion.online. All Rights Reserved. Developed by <a href="https://devsagar.online" target="_blank">Avijit Sagar</a></p>
+</div>
   <!-- footer end -->
 </div>
 <!-- page wrapper end -->

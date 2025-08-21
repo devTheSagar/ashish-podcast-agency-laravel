@@ -116,8 +116,9 @@
   <div class="watermark">PodcastPromotion.online</div>
 
   <div class="header">
-    <h1>Invoice #{{ $order->id }}</h1>
-    <p>PodcastPromotion.online</p>
+    <h1>PodcastPromotion.online</h1>
+    <p>Invoice #{{ $order->id }}</p>
+    {{-- <p>PodcastPromotion.online</p> --}}
     <p><strong>Order Date:</strong> {{ optional($order->created_at)->format('d M Y') }}</p>
     <p><strong>Status:</strong> {{ ucfirst($order->status ?? '—') }}</p>
   </div>
