@@ -97,7 +97,7 @@
                     <img src="{{ asset($team->memberImage) }}" alt="team image">
                   </div>
                   <div class="lead-text">
-                    <h4>{{ $team->memberName }} <span>(Podcast Marketing Operator)</span></h4>
+                    <h4>{{ $team->memberName }}</h4>
                     <ul class="lead-stats">
                       <li>⭐ {{$team->memberRating}} Rating</li>
                       <li>🎧 {{ $team->totalReview }}+ Active Clients</li>
@@ -165,7 +165,7 @@
 
               <!-- Reviews list -->
               <div class="reviews-list" id="reviewsList">
-                @foreach ($planDetails->ratings as $rating)
+                {{-- @foreach ($planDetails->ratings as $rating)
                   <article class="review" data-rating="{{ $rating->planRating }}">
                     <div class="avatar"><img src="img/review/1.png" alt="reviewer"></div>
                     <div>
@@ -177,6 +177,51 @@
                             @else
                                 <i class="far fa-star"></i>
                             @endif
+                        @endfor
+                      </div>
+                      <p>{{ $rating->clientReview }}</p>
+                    </div>
+                  </article>
+                @endforeach --}}
+                @foreach (($planDetails->ratings ?? []) as $rating)
+                  @php
+                    $name  = trim($rating->clientName ?? '');
+                    $parts = preg_split('/[\s\-]+/u', $name, -1, PREG_SPLIT_NO_EMPTY);
+                    if (empty($parts)) {
+                        $initials = '?';
+                    } elseif (count($parts) === 1) {
+                        $initials = mb_strtoupper(mb_substr($parts[0], 0, 1, 'UTF-8'), 'UTF-8');
+                    } else {
+                        $first = mb_substr($parts[0], 0, 1, 'UTF-8');
+                        $last  = mb_substr($parts[count($parts)-1], 0, 1, 'UTF-8');
+                        $initials = mb_strtoupper($first.$last, 'UTF-8'); // "sagar biswas" -> "SB"
+                    }
+                    $photo = $rating->clientPhoto ?? null;
+                  @endphp
+
+                  <article class="review" data-rating="{{ $rating->planRating }}">
+                    <div class="avatar">
+                      @if($photo)
+                        <img
+                          src="{{ $photo }}"
+                          alt="{{ $rating->clientName }}"
+                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                        >
+                        <span class="avatar-initial" aria-hidden="true" style="display:none;">{{ $initials }}</span>
+                      @else
+                        <span class="avatar-initial" aria-hidden="true">{{ $initials }}</span>
+                      @endif
+                    </div>
+
+                    <div>
+                      <h4>{{ $rating->clientName }}</h4>
+                      <div class="row-1">
+                        @for ($i = 1; $i <= 5; $i++)
+                          @if ($i <= (int)$rating->planRating)
+                            <i class="fas fa-star"></i>
+                          @else
+                            <i class="far fa-star"></i>
+                          @endif
                         @endfor
                       </div>
                       <p>{{ $rating->clientReview }}</p>

@@ -1,165 +1,182 @@
 @extends('frontend.master')
 
 @section('title')
-    Checkout 
+  Checkout
 @endsection
 
 @section('content')
-    <!-- breadcrumb start -->
-  <div class="breadcrumb-nav">
-    <div class="container">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item"><a href="courses.html">courses</a></li>
-          <li class="breadcrumb-item active" aria-current="page">course details</li>
-        </ol>
-      </nav>
-    </div>
-  </div>
-  <!-- breadcrumb end -->
 
-  <!-- course details section start -->
-  <section class="course-details section-padding">
-    <div class="container">
-      <div class="row">
-        
-        <div class="col-lg-4">
-          <!-- course sidebar start -->
-          <div class="course-sidebar box">
-            <h2>{{ $plan->service->serviceName }} {{$plan->planName}} Plan</h2>
-            <div class="price d-flex align-items-center mb-3">
-              {{-- <span class="price-old text-decoration-line-through">$100</span> --}}
-              <span>Total</span>
-              <span class="price-new">${{ $plan->planPrice }}</span>
-              {{-- <span class="price-discount">51% Off</span> --}}
-            </div>
-            <h3 class="mb-3">Plan Features</h3>
-            <ul class="features-list">
-              @foreach (json_decode($plan->planFeatures, true) as $feature)
-                <li><i class=""></i> {{ $feature }}</li>
-              @endforeach
-            </ul>
+<section class="section-padding" style="margin-top: 5vh">
+  <div class="container">
+    <div class="grid">
+
+      <!-- Sidebar: Order summary -->
+      <aside class="order-side">
+        <div class="card">
+          <h2 class="pane-title">{{ $plan->service->serviceName }} — {{ $plan->planName }} Plan</h2>
+
+          <div class="price-row">
+            <span class="new">${{ number_format($plan->planPrice, 2) }}</span>
+            <span class="off">Total</span>
           </div>
-          <!-- course sidebar end -->
+
+          @if(!empty($plan->planDuration))
+            <p class="muted">Duration: <strong>{{ $plan->planDuration }}</strong> days</p>
+          @endif
+
+          <h3 class="mt-10">Plan Features</h3>
+          <ul class="feature-list">
+            @foreach (json_decode($plan->planFeatures, true) as $feature)
+              <li>{{ $feature }}</li>
+            @endforeach
+          </ul>
         </div>
+      </aside>
 
-        <div class="col-lg-8">
-            <!-- course curriculum start -->
-            <div class="tab-pane fade show active" id="course-curriculum" role="tabpanel" aria-labelledby="course-curriculum-tab">
-              <div class="course-curriculum box">
-                <h3 class="text-capitalize mb-4">place order</h3>
-                <h3 class="text-capitalize mb-4">to place order, you have to pay <b>${{ $plan->planPrice }}</b> in this paypal account and put the transaction id in the transaction id box</h3>
-                <!-- order start -->
-                <form action="{{ route('user.order') }}" method="POST">
-                  @csrf
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" name="name" value="{{ auth()->user()->name }}" class="form-control @error('name') is-invalid @enderror" id="name">
-                        @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email address</label>
-                        <input type="email" name="email" value="{{ auth()->user()->email }}" class="form-control @error('email') is-invalid @enderror" id="email">
-                        @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="phone" class="form-label">Phone Number</label>
-                        <input type="number" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone') }}" id="phone">
-                        @error('number')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="transaction-id" class="form-label">Transaction Id</label>
-                        <input type="text" name="transactionId" class="form-control @error('transactionId') is-invalid @enderror" value="{{ old('transactionId') }}" id="transaction-id">
-                        @error('transactionId')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="transaction-id" class="form-label">Your Podcast Link</label>
-                        <input type="text" name="link" class="form-control @error('link') is-invalid @enderror" value="{{ old('link') }}" id="transaction-id">
-                        @error('link')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                      <label for="targeted-country" class="form-label">Your Targeted Country</label>
-                      <div class="row">
-                        <div class="col-md-6">
-                              {{-- hidden field to pass plan id  --}}
-                              <input type="hidden" name="planId" value="{{ $plan->id }}">
+      <!-- Main: Checkout form -->
+      <main class="order-main">
+        <div class="card order-form">
+          <h3 class="pane-title">Place Order</h3>
 
-                              <div class="form-check">
-                                  <input class="form-check-input" name="country[]" type="checkbox" value="USA" id="usa">
-                                  <label class="form-check-label" for="usa">USA</label>
-                              </div>
-                              <div class="form-check">
-                                  <input class="form-check-input" name="country[]" type="checkbox" value="Canada" id="canada">
-                                  <label class="form-check-label" for="canada">Canada</label>
-                              </div>
-                              <div class="form-check">
-                                  <input class="form-check-input" name="country[]" type="checkbox" value="UK" id="uk">
-                                  <label class="form-check-label" for="uk">UK</label>
-                              </div>
-                              <div class="form-check">
-                                  <input class="form-check-input" name="country[]" type="checkbox" value="Australia" id="australia">
-                                  <label class="form-check-label" for="australia">Australia</label>
-                              </div>
-                        </div>
-                        <div class="col-md-6">
-                              <div class="form-check">
-                                  <input class="form-check-input" name="country[]" type="checkbox" value="Germany" id="germany">
-                                  <label class="form-check-label" for="germany">Germany</label>
-                              </div>
-                              <div class="form-check">
-                                  <input class="form-check-input" name="country[]" type="checkbox" value="Finland" id="finland">
-                                  <label class="form-check-label" for="finland">Finland</label>
-                              </div>
-                              <div class="form-check">
-                                  <input class="form-check-input" name="country[]" type="checkbox" value="India" id="india">
-                                  <label class="form-check-label" for="india">India</label>
-                              </div>
-                          </div>
-                      </div>
-                      @error('country')
-                          <div class="text-danger">{{ $message }}</div>
-                      @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="additional-text" class="form-label">Additonal Text</label>
-                        <textarea name="additionalText" class="form-control @error('additionalText') is-invalid @enderror" id="additional-text" rows="3">{{old('additionalText')}}</textarea>
-                        @error('additionalText')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    </div>
-                    {{-- <div  class="mb-3">
-                        <input class="form-check-input" type="checkbox" name="agree" id="checkDefault">
-                        <label class="form-check-label" for="checkDefault">
-                            I agree to the <a href="#">terms and conditions</a> and <a href="#">privacy policy</a>
-                        </label>
-                        @error('agree')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div> --}}
-                    <div class="btn-wrap mt-3">
-                        <button type="submit" class="btn btn-theme btn-block">Confirm Order</button>
-                        <!-- <a href="#" type="button" class="btn btn-theme btn-block">enroll now</a> -->
-                    </div>
-                </form>
-                <!-- order end -->
+          <div class="pay-card">
+            <div class="pay-row">
+              <div class="pay-ico" aria-hidden="true">💳</div>
+              <div>
+                <p class="pay-title">Payment instruction</p>
+                <p class="pay-text">
+                  Please pay <strong class="pay-amount">${{ number_format($plan->planPrice, 2) }}</strong> to our <strong>Payoneer</strong> email <span class="pay-kbd pay-amount">payoneeremail@gmail.com</span>
+                  and paste the <span class="pay-kbd">Transaction ID</span> below to confirm your order. If you want to use another payment method, please <a href="{{ route('user.message') }}"><u>contact us</u></a>.
+                </p>
               </div>
             </div>
-            <!-- course curriculum end -->
+          </div>
+
+
+          <form action="{{ route('user.order') }}" method="POST" novalidate>
+            @csrf
+            <input type="hidden" name="planId" value="{{ $plan->id }}">
+
+            <div class="input-box">
+              <label for="name">Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                class="input-control @error('name') is-invalid @enderror"
+                value="{{ old('name', auth()->user()->name ?? '') }}"
+                placeholder="Your full name">
+              @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="input-box">
+              <label for="email">Email address</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="input-control @error('email') is-invalid @enderror"
+                value="{{ old('email', auth()->user()->email ?? '') }}"
+                placeholder="you@example.com">
+              @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="input-box">
+              <label for="phone">Phone Number</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                class="input-control @error('phone') is-invalid @enderror"
+                value="{{ old('phone') }}"
+                placeholder="+1 555 000 1234">
+              @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="input-box">
+              <label for="transactionId">Transaction ID</label>
+              <input
+                type="text"
+                id="transactionId"
+                name="transactionId"
+                class="input-control @error('transactionId') is-invalid @enderror"
+                value="{{ old('transactionId') }}"
+                placeholder="e.g., 9AB12345C6789012">
+              @error('transactionId') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="input-box">
+              <label for="link">Your Podcast Link</label>
+              <input
+                type="url"
+                id="link"
+                name="link"
+                class="input-control @error('link') is-invalid @enderror"
+                value="{{ old('link') }}"
+                placeholder="https://">
+              @error('link') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="input-box">
+              <label>Targeted Countries</label>
+
+              <label class="remember">
+                <input type="checkbox" name="country[]" value="USA" {{ in_array('USA', (array)old('country', [])) ? 'checked' : '' }}>
+                <span>USA</span>
+              </label>
+
+              <label class="remember">
+                <input type="checkbox" name="country[]" value="Canada" {{ in_array('Canada', (array)old('country', [])) ? 'checked' : '' }}>
+                <span>Canada</span>
+              </label>
+
+              <label class="remember">
+                <input type="checkbox" name="country[]" value="UK" {{ in_array('UK', (array)old('country', [])) ? 'checked' : '' }}>
+                <span>UK</span>
+              </label>
+
+              <label class="remember">
+                <input type="checkbox" name="country[]" value="Australia" {{ in_array('Australia', (array)old('country', [])) ? 'checked' : '' }}>
+                <span>Australia</span>
+              </label>
+
+              <label class="remember">
+                <input type="checkbox" name="country[]" value="Germany" {{ in_array('Germany', (array)old('country', [])) ? 'checked' : '' }}>
+                <span>Germany</span>
+              </label>
+
+              <label class="remember">
+                <input type="checkbox" name="country[]" value="Finland" {{ in_array('Finland', (array)old('country', [])) ? 'checked' : '' }}>
+                <span>Finland</span>
+              </label>
+
+              <label class="remember">
+                <input type="checkbox" name="country[]" value="India" {{ in_array('India', (array)old('country', [])) ? 'checked' : '' }}>
+                <span>India</span>
+              </label>
+
+              @error('country') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="input-box">
+              <label for="additionalText">Additional Text</label>
+              <textarea
+                id="additionalText"
+                name="additionalText"
+                rows="4"
+                class="input-control @error('additionalText') is-invalid @enderror"
+                placeholder="Anything else we should know?">{{ old('additionalText') }}</textarea>
+              @error('additionalText') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="btn-wrap">
+              <button type="submit" class="btn" style="width:100%;">Confirm Order</button>
+            </div>
+          </form>
         </div>
-      </div>
+      </main>
+
     </div>
-  </section>
-  <!-- course details section end -->
+  </div>
+</section>
+
 @endsection

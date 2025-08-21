@@ -1609,3 +1609,54 @@ textarea.input-control{
   .account-aside{ order: -1; margin-top: 0; }  /* aside first */
   .account-main{ order: 0; }
 }
+
+
+
+/* existing light-mode styles (unchanged) */
+.pay-card{
+  border:1px solid var(--border-color);
+  border-left:4px solid var(--main-color);
+  background: var(--bg-white);      /* light surface */
+  border-radius:12px;
+  padding:12px 14px;
+  box-shadow: var(--shadow);
+  margin:10px 0;
+}
+.pay-row{ display:flex; gap:12px; align-items:flex-start; }
+.pay-ico{ font-size:18px; line-height:1; margin-top:2px; }
+.pay-title{ margin:0 0 4px; font-weight:600; color: var(--text-x-dark-gray); }
+.pay-text{ margin:0; color: var(--text-x-dark-gray); }
+.pay-amount{ color: var(--main-color); }
+.pay-kbd{
+  display:inline-block; padding:0 6px; border-radius:6px;
+  border:1px solid var(--border-color); background: var(--bg-color);
+  font-weight:600;
+}
+
+/* DARK MODE FIXES */
+body.t-dark .pay-card{
+  background: var(--bg-color);      /* use dark surface in dark mode */
+}
+
+body.t-dark .pay-title,
+body.t-dark .pay-text{
+  color: var(--text-x-dark-gray);   /* this is light-on-dark, now readable */
+}
+
+body.t-dark .pay-kbd{
+  background: hsl(var(--hue), 13%, 22%);  /* slightly lighter chip on dark */
+  border-color: var(--border-color);
+}
+
+
+.t-avatar{
+  width:56px; height:56px; border-radius:50%; overflow:hidden;
+  background: var(--bg-white); box-shadow: var(--shadow);
+  display:flex; align-items:center; justify-content:center;
+}
+.t-avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+.avatar-initial{
+  width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+  background: var(--bg-color); color: var(--main-color);
+  font-weight:700; font-size:20px; text-transform: uppercase;
+}

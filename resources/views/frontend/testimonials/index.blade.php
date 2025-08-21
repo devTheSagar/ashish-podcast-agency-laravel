@@ -19,9 +19,37 @@
         <article class="testimonial-item" data-aos="fade-up" data-aos-duration="600">
           <div class="t-card">
             <div class="t-head">
+              {{-- <div class="t-avatar">
+                <img src="{{ $testimonial->photo ?? asset('frontend/assets/img/review/1.png') }}" alt="{{ $testimonial->name }}">
+              </div> --}}
+              @php
+                $name = trim($testimonial->name ?? '');
+                $parts = preg_split('/[\s\-]+/u', $name, -1, PREG_SPLIT_NO_EMPTY);
+                if (!$parts) {
+                    $initials = '?';
+                } elseif (count($parts) === 1) {
+                    $initials = mb_strtoupper(mb_substr($parts[0], 0, 1, 'UTF-8'), 'UTF-8');
+                } else {
+                    $first = mb_substr($parts[0], 0, 1, 'UTF-8');
+                    $last  = mb_substr($parts[count($parts)-1], 0, 1, 'UTF-8');
+                    $initials = mb_strtoupper($first.$last, 'UTF-8');  // e.g., "sagar biswas" -> "SB"
+                }
+              @endphp
+
               <div class="t-avatar">
-                <img src="{{ $testimonial->photo ?? asset('img/review/default.png') }}" alt="{{ $testimonial->name }}">
+                @if(!empty($testimonial->photo))
+                  <img
+                    src="{{ $testimonial->photo }}"
+                    alt="{{ $testimonial->name }}"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                  >
+                  <span class="avatar-initial" aria-hidden="true" style="display:none;">{{ $initials }}</span>
+                @else
+                  <span class="avatar-initial" aria-hidden="true">{{ $initials }}</span>
+                @endif
               </div>
+
+
               <div class="t-id">
                 <h3>{{ $testimonial->name }}</h3>
                 <p>{{ $testimonial->designation }}</p>
