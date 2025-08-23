@@ -24,7 +24,7 @@
     <header class="header js-header">
       <div class="container">
         <div class="logo" data-aos="fade-down" data-aos-duration="1000">
-          <a href="{{ route('user.dashboard') }}">Podcast Growth<span>Agency</span></a>
+          <a href="{{ route('user.dashboard') }}">Podcast Growth<span>Podcast Promotion Agency</span></a>
         </div>
         <button type="button" class="nav-toggler js-nav-toggler" data-aos="fade-down" data-aos-duration="1000">
           <span></span>

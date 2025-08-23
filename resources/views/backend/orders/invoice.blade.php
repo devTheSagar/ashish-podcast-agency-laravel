@@ -116,7 +116,7 @@
   <div class="watermark">podcastgrowth.agency</div>
 
   <div class="header">
-    <h1>PodcastPromotion.online</h1>
+    <h1>PodcastGrowth.agency</h1>
     <p>Invoice #{{ $order->id }}</p>
     {{-- <p>PodcastPromotion.online</p> --}}
     <p><strong>Order Date:</strong> {{ optional($order->created_at)->format('d M Y') }}</p>
