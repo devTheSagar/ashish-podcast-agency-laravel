@@ -15,6 +15,6 @@
         <p>If you have any questions, feel free to contact us.</p>
 
         <p>Best regards,<br>
-        PodcastPromotion.online Team</p>
+        PodcastGrowth.agency Team</p>
     </body>
 </html>
