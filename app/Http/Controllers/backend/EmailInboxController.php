@@ -10,6 +10,9 @@ use Illuminate\Support\Str;
 
 class EmailInboxController extends Controller
 {
+    /* =========================
+     * CONNECTION
+     * ========================= */
     protected function connect()
     {
         $imapBox = '{'.env('MAIL_IMAP_HOST').':'.env('MAIL_IMAP_PORT').'/imap/ssl/novalidate-cert}INBOX';
@@ -32,22 +35,10 @@ class EmailInboxController extends Controller
         throw new \RuntimeException('POP3/IMAP connect failed: '.$err);
     }
 
+    /* =========================
+     * DECODERS & HELPERS
+     * ========================= */
 
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * Decode a fetched body chunk with given encoding, and convert charset to UTF-8 if provided.
-     */
     protected function decodePart(string $data, int $encoding, ?string $charset): string
     {
         switch ($encoding) {
@@ -58,11 +49,10 @@ class EmailInboxController extends Controller
                 $data = quoted_printable_decode($data);
                 break;
             default:
-                // 0=7BIT, 1=8BIT, 2=BINARY, leave as-is
+                // 0=7BIT, 1=8BIT, 2=BINARY
                 break;
         }
 
-        // Convert charset to UTF-8 if possible
         $charset = $charset ? strtoupper($charset) : null;
         if ($charset && $charset !== 'UTF-8' && function_exists('iconv')) {
             $converted = @iconv($charset, 'UTF-8//TRANSLIT', $data);
@@ -74,20 +64,6 @@ class EmailInboxController extends Controller
         return is_string($data) ? $data : '';
     }
 
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * Extract charset from a part's parameters/dparameters.
-     */
     protected function getCharsetFromPart($part): ?string
     {
         $charset = null;
@@ -110,55 +86,50 @@ class EmailInboxController extends Controller
         return $charset;
     }
 
+    /* =========================
+     * UID-BASED FETCHERS
+     * ========================= */
 
+    /** Get all UIDs (newest first) */
+    protected function getAllUids($inbox): array
+    {
+        $uids = imap_search($inbox, 'ALL', SE_UID) ?: [];
+        rsort($uids);
+        return $uids;
+    }
 
+    /** Parse header using UID (replacement for imap_headerinfo on seqno) */
+    protected function fetchHeaderByUid($inbox, int $uid)
+    {
+        $raw = @imap_fetchheader($inbox, (string)$uid, FT_UID);
+        if (!$raw) return null;
+        return imap_rfc822_parse_headers($raw);
+    }
 
-
-
-
-
-
-
-
-
-
-
-    /**
-     * Recursively walk parts to find best body.
-     * Preference: text/html > text/plain.
-     */
-    protected function findBestBody($inbox, int $msgno, $part, string $sectionPrefix = '')
+    /** Tree walker (UID version): prefers text/html > text/plain */
+    protected function findBestBodyUid($inbox, int $uid, $part, string $sectionPrefix = '')
     {
         $best = ['html' => null, 'plain' => null];
 
-        // If this is a leaf text part
         if (isset($part->type) && $part->type == TYPETEXT) {
             $subtype = strtolower($part->subtype ?? '');
             if ($subtype === 'plain' || $subtype === 'html') {
                 $section = $sectionPrefix !== '' ? $sectionPrefix : '1';
-                $raw = imap_fetchbody($inbox, $msgno, $section);
+                $raw     = @imap_fetchbody($inbox, (string)$uid, $section, FT_UID);
                 $charset = $this->getCharsetFromPart($part);
                 $decoded = $this->decodePart($raw, (int)($part->encoding ?? 0), $charset);
-
-                if ($subtype === 'html') {
-                    $best['html'] = $decoded;
-                } else {
-                    $best['plain'] = $decoded;
-                }
+                if ($subtype === 'html') $best['html'] = $decoded; else $best['plain'] = $decoded;
             }
         }
 
-        // If multipart, traverse children
         if (isset($part->type) && $part->type == TYPEMULTIPART && !empty($part->parts)) {
             foreach ($part->parts as $idx => $child) {
-                $section = $sectionPrefix === '' ? (string)($idx + 1) : ($sectionPrefix.'.'.($idx + 1));
-                $childBest = $this->findBestBody($inbox, $msgno, $child, $section);
+                $section   = $sectionPrefix === '' ? (string)($idx + 1) : ($sectionPrefix.'.'.($idx + 1));
+                $childBest = $this->findBestBodyUid($inbox, $uid, $child, $section);
 
-                // Merge preference
-                if ($childBest['html'] && !$best['html']) $best['html'] = $childBest['html'];
+                if ($childBest['html']  && !$best['html'])  $best['html']  = $childBest['html'];
                 if ($childBest['plain'] && !$best['plain']) $best['plain'] = $childBest['plain'];
 
-                // Early stop if got HTML
                 if ($best['html']) break;
             }
         }
@@ -166,123 +137,81 @@ class EmailInboxController extends Controller
         return $best;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * Public API: returns ['body' => string, 'is_html' => bool]
-     */
-    protected function fetchBody($inbox, int $msgno): array
+    /** Body by UID (returns ['body'=>string, 'is_html'=>bool]) */
+    protected function fetchBodyByUid($inbox, int $uid): array
     {
-        $structure = imap_fetchstructure($inbox, $msgno);
+        $structure = @imap_fetchstructure($inbox, (string)$uid, FT_UID);
 
-        // No structure? Fall back to imap_body
         if (!$structure) {
-            $raw = imap_body($inbox, $msgno);
+            $raw = @imap_body($inbox, (string)$uid, FT_UID);
             return ['body' => $this->decodePart($raw, 0, null), 'is_html' => false];
         }
 
-        // Single-part message
         if (!isset($structure->parts)) {
-            $raw = imap_body($inbox, $msgno);
+            $raw     = @imap_body($inbox, (string)$uid, FT_UID);
             $charset = $this->getCharsetFromPart($structure);
             $decoded = $this->decodePart($raw, (int)($structure->encoding ?? 0), $charset);
-            $isHtml = (isset($structure->type) && $structure->type == TYPETEXT && strtolower($structure->subtype ?? '') === 'html');
+            $isHtml  = (isset($structure->type) && $structure->type == TYPETEXT && strtolower($structure->subtype ?? '') === 'html');
             return ['body' => $decoded, 'is_html' => $isHtml];
         }
 
-        // Multipart: find best
-        $best = $this->findBestBody($inbox, $msgno, $structure, '');
-        if (!empty($best['html'])) {
-            return ['body' => $best['html'], 'is_html' => true];
-        }
-        if (!empty($best['plain'])) {
-            return ['body' => $best['plain'], 'is_html' => false];
-        }
+        $best = $this->findBestBodyUid($inbox, $uid, $structure, '');
+        if (!empty($best['html']))  return ['body' => $best['html'],  'is_html' => true];
+        if (!empty($best['plain'])) return ['body' => $best['plain'], 'is_html' => false];
 
-        // As a last resort, return the raw first part decoded
-        $raw = imap_fetchbody($inbox, $msgno, '1');
-        $first = $structure->parts[0] ?? null;
+        $raw     = @imap_fetchbody($inbox, (string)$uid, '1', FT_UID);
+        $first   = $structure->parts[0] ?? null;
         $charset = $first ? $this->getCharsetFromPart($first) : null;
         $decoded = $this->decodePart($raw, (int)($first->encoding ?? 0), $charset);
-
         return ['body' => $decoded, 'is_html' => (strtolower($first->subtype ?? '') === 'html')];
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * Recursively collect attachments with section numbers.
-     */
-    protected function collectAttachments($inbox, int $msgno, $part, string $sectionPrefix = '', array &$out = [])
+    /** Attachments by UID */
+    protected function fetchAttachmentsByUid($inbox, int $uid): array
     {
-        // If multipart, go deeper
+        $structure = @imap_fetchstructure($inbox, (string)$uid, FT_UID);
+        $attachments = [];
+        if ($structure) {
+            $this->collectAttachmentsUid($inbox, $uid, $structure, '', $attachments);
+        }
+        return $attachments;
+    }
+
+    protected function collectAttachmentsUid($inbox, int $uid, $part, string $sectionPrefix = '', array &$out = [])
+    {
         if (isset($part->type) && $part->type == TYPEMULTIPART && !empty($part->parts)) {
             foreach ($part->parts as $idx => $child) {
                 $section = $sectionPrefix === '' ? (string)($idx + 1) : ($sectionPrefix.'.'.($idx + 1));
-                $this->collectAttachments($inbox, $msgno, $child, $section, $out);
+                $this->collectAttachmentsUid($inbox, $uid, $child, $section, $out);
             }
             return;
         }
 
-        // A non-multipart part: check disposition/name/filename
-        $disposition = strtolower($part->disposition ?? '');
+        $disposition  = strtolower($part->disposition ?? '');
         $isAttachment = in_array($disposition, ['attachment', 'inline'], true);
 
         $filename = null; $name = null; $charset = $this->getCharsetFromPart($part);
 
         if (!empty($part->dparameters)) {
             foreach ($part->dparameters as $p) {
-                $attr = strtolower($p->attribute);
-                if ($attr === 'filename') $filename = $p->value;
+                if (strtolower($p->attribute) === 'filename') $filename = $p->value;
             }
         }
         if (!empty($part->parameters)) {
             foreach ($part->parameters as $p) {
-                $attr = strtolower($p->attribute);
-                if ($attr === 'name') $name = $p->value;
+                if (strtolower($p->attribute) === 'name') $name = $p->value;
             }
         }
-
-        // Some providers set no disposition, but provide filename/name => treat as attachment
-        if (!$isAttachment && ($filename || $name)) {
-            $isAttachment = true;
-        }
+        if (!$isAttachment && ($filename || $name)) $isAttachment = true;
 
         if ($isAttachment) {
             $section = $sectionPrefix !== '' ? $sectionPrefix : '1';
-            $raw = imap_fetchbody($inbox, $msgno, $section);
-            $data = $this->decodePart($raw, (int)($part->encoding ?? 0), $charset);
-            $fname = $filename ?: $name ?: ('attachment-'.$section);
+            $raw     = @imap_fetchbody($inbox, (string)$uid, $section, FT_UID);
+            $data    = $this->decodePart($raw, (int)($part->encoding ?? 0), $charset);
+            $fname   = $filename ?: $name ?: ('attachment-'.$section);
+            $fname   = imap_utf8($fname);
 
-            // Decode RFC 2231 or encoded-words in filenames if present
-            $fname = imap_utf8($fname);
-
-            $mimePrimary = isset($part->type) ? $part->type : null; // Not strictly needed
+            $mimePrimary = isset($part->type) ? $part->type : null;
             $mimeSubtype = strtolower($part->subtype ?? '');
             $mime = $mimePrimary === TYPETEXT ? "text/$mimeSubtype"
                   : ($mimePrimary === TYPEIMAGE ? "image/$mimeSubtype"
@@ -290,86 +219,52 @@ class EmailInboxController extends Controller
                   : ($mimePrimary === TYPEVIDEO ? "video/$mimeSubtype"
                   : "application/$mimeSubtype")));
 
-            $out[] = [
-                'filename' => $fname,
-                'data'     => $data,
-                'mime'     => $mime,
-            ];
+            $out[] = ['filename' => $fname, 'data' => $data, 'mime' => $mime];
         }
     }
 
-
-
-
-
-
-
-
-
-    protected function fetchAttachments($inbox, int $msgno): array
-    {
-        $structure = imap_fetchstructure($inbox, $msgno);
-        $attachments = [];
-        if ($structure) {
-            $this->collectAttachments($inbox, $msgno, $structure, '', $attachments);
-        }
-        return $attachments;
-    }
-
-
-
-
-
-
-
-
-
-
+    /* =========================
+     * CONTROLLER ACTIONS (routes use {id}, value = UID)
+     * ========================= */
 
     public function index(Request $request)
     {
         $inbox = $this->connect();
-        $total = imap_num_msg($inbox);
+
+        $uids  = $this->getAllUids($inbox);
+        $total = count($uids);
 
         $perPage = 20;
-        $page = max(1, (int)$request->query('page', 1));
-        $start = max(1, $total - (($page - 1) * $perPage));
-        $end   = max(1, $start - $perPage + 1);
+        $page    = max(1, (int)$request->query('page', 1));
+        $offset  = ($page - 1) * $perPage;
+        $chunk   = array_slice($uids, $offset, $perPage);
 
         $items = [];
-        for ($i = $start; $i >= $end; $i--) {
-            if ($i < 1) break;
+        foreach ($chunk as $uid) {
+            $h = $this->fetchHeaderByUid($inbox, (int)$uid);
+            if (!$h) continue;
 
-            $h = imap_headerinfo($inbox, $i);
-            $from = isset($h->from) ? ($h->from[0]->mailbox.'@'.$h->from[0]->host) : '';
-            $to   = isset($h->to)   ? ($h->to[0]->mailbox.'@'.$h->to[0]->host)   : '';
+            $from    = isset($h->from) ? ($h->from[0]->mailbox.'@'.$h->from[0]->host) : '';
+            $to      = isset($h->to)   ? ($h->to[0]->mailbox.'@'.$h->to[0]->host)     : '';
             $subject = isset($h->subject) ? imap_utf8($h->subject) : '(no subject)';
             $dateRaw = $h->date ?? '';
 
-            // Seen / Recent flags from IMAP overview (POP3 হলে নাও আসতে পারে)
-            $overview = @imap_fetch_overview($inbox, $i, 0);
-            $seen   = false;
-            $recent = false;
-            if ($overview && isset($overview[0])) {
-                $o = $overview[0];
-                $seen   = property_exists($o, 'seen')   ? (bool)$o->seen   : false;
-                $recent = property_exists($o, 'recent') ? (bool)$o->recent : false;
-            }
+            $ov = @imap_fetch_overview($inbox, (string)$uid, FT_UID);
+            $o  = $ov[0] ?? null;
+            $seen   = (bool)($o->seen   ?? false);
+            $recent = (bool)($o->recent ?? false);
 
-            // Body & preview
-            $bodyInfo = $this->fetchBody($inbox, $i);
-            $body = $bodyInfo['body'] ?? '';
+            $bodyInfo = $this->fetchBodyByUid($inbox, (int)$uid);
+            $body   = $bodyInfo['body'] ?? '';
             $isHtml = (bool)($bodyInfo['is_html'] ?? false);
 
             $previewText = $isHtml ? trim(strip_tags($body)) : trim($body);
-            // HTML entities ডিকোড + nbsp → space + whitespace normalize
             $previewText = html_entity_decode($previewText, ENT_QUOTES | ENT_HTML5, 'UTF-8');
             $previewText = str_replace(["\xC2\xA0", chr(160)], ' ', $previewText);
             $previewText = preg_replace('/\s+/u', ' ', $previewText);
             $previewText = trim($previewText);
-            $preview = mb_strimwidth($previewText, 0, 140, '…', 'UTF-8');
+            $preview     = mb_strimwidth($previewText, 0, 140, '…', 'UTF-8');
 
-            // Date parse safe
             try {
                 $dateBD = $dateRaw ? Carbon::parse($dateRaw)->timezone('Asia/Dhaka')->format('j F Y g:i a') : '';
             } catch (\Throwable $e) {
@@ -377,19 +272,19 @@ class EmailInboxController extends Controller
             }
 
             $items[] = [
-                'id'        => $i,
+                'id'        => (int)$uid, // <-- কী নাম 'id', কিন্তু ভ্যালু UID
                 'from'      => $from,
                 'to'        => $to,
                 'subject'   => $subject,
                 'date'      => $dateBD,
                 'preview'   => $preview,
-                'is_seen'   => $seen,    // <-- Blade-এ রঙ/স্টাইলের জন্য
-                'is_recent' => $recent,  // <-- দরকার হলে ইউজ করবেন
+                'is_seen'   => $seen,
+                'is_recent' => $recent,
             ];
         }
+
         imap_close($inbox);
 
-        // sort by timestamp (date already formatted, so re-parse safely)
         usort($items, function ($a, $b) {
             $ta = strtotime($a['date']) ?: 0;
             $tb = strtotime($b['date']) ?: 0;
@@ -398,55 +293,51 @@ class EmailInboxController extends Controller
 
         $totalPages = max(1, (int)ceil($total / $perPage));
 
-        return view('backend.custom-email.inbox', compact('items','page','totalPages','total'));
+        return view('backend.custom-email.inbox', [
+            'items'      => $items,
+            'page'       => $page,
+            'totalPages' => $totalPages,
+            'total'      => $total,
+        ]);
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
     public function show($id)
     {
         $inbox = $this->connect();
-        $total = imap_num_msg($inbox);
-        if ($id < 1 || $id > $total) abort(404);
 
-        $h = imap_headerinfo($inbox, $id);
-        $from = isset($h->from) ? ($h->from[0]->mailbox.'@'.$h->from[0]->host) : '';
-        $to   = isset($h->to)   ? ($h->to[0]->mailbox.'@'.$h->to[0]->host)   : '';
+        // এখানে $id = UID
+        $h = $this->fetchHeaderByUid($inbox, (int)$id);
+        if (!$h) { imap_close($inbox); abort(404); }
+
+        $from    = isset($h->from) ? ($h->from[0]->mailbox.'@'.$h->from[0]->host) : '';
+        $to      = isset($h->to)   ? ($h->to[0]->mailbox.'@'.$h->from[0]->host ?? $h->to[0]->host) : '';
         $subject = isset($h->subject) ? imap_utf8($h->subject) : '(no subject)';
-        $date = $h->date ?? '';
-        $dateBD = Carbon::parse($date)->timezone('Asia/Dhaka')->format('j F Y g:i a');
+        $date    = $h->date ?? '';
+        $dateBD  = Carbon::parse($date)->timezone('Asia/Dhaka')->format('j F Y g:i a');
 
-        $bodyInfo = $this->fetchBody($inbox, $id);
-        $body   = $bodyInfo['body'];
-        $isHtml = $bodyInfo['is_html'];
-
-        $attachments = $this->fetchAttachments($inbox, $id);
+        $bodyInfo    = $this->fetchBodyByUid($inbox, (int)$id);
+        $body        = $bodyInfo['body'];
+        $isHtml      = $bodyInfo['is_html'];
+        $attachments = $this->fetchAttachmentsByUid($inbox, (int)$id);
 
         imap_close($inbox);
 
-        return view('backend.custom-email.view-email', compact('id','from','to','subject','dateBD','body','isHtml','attachments'));
+        return view('backend.custom-email.view-email', [
+            'id'          => (int)$id,   // Blade-এ একই নাম ব্যবহার
+            'from'        => $from,
+            'to'          => $to,
+            'subject'     => $subject,
+            'dateBD'      => $dateBD,
+            'body'        => $body,
+            'isHtml'      => $isHtml,
+            'attachments' => $attachments,
+        ]);
     }
-
-
-
-
-
-
 
     public function downloadAttachment($id, $index)
     {
         $inbox = $this->connect();
-        $attachments = $this->fetchAttachments($inbox, $id);
+        $attachments = $this->fetchAttachmentsByUid($inbox, (int)$id);
         imap_close($inbox);
 
         if (!isset($attachments[$index])) {
@@ -459,70 +350,47 @@ class EmailInboxController extends Controller
             ->header('Content-Disposition', 'attachment; filename="'.$att['filename'].'"');
     }
 
-
-
-
-
-
-
-
-
-
     public function replyForm($id)
     {
         $inbox = $this->connect();
-        $total = imap_num_msg($inbox);
-        if ($id < 1 || $id > $total) abort(404);
 
-        $h = imap_headerinfo($inbox, $id);
+        $h = $this->fetchHeaderByUid($inbox, (int)$id);
+        if (!$h) { imap_close($inbox); abort(404); }
 
         $fromEmail = isset($h->from) ? ($h->from[0]->mailbox.'@'.$h->from[0]->host) : '';
-        $toEmail   = isset($h->to)   ? ($h->to[0]->mailbox.'@'.$h->to[0]->host)   : '';
+        $toEmail   = isset($h->to)   ? ($h->to[0]->mailbox.'@'.$h->to[0]->host)     : '';
         $subject   = isset($h->subject) ? imap_utf8($h->subject) : '(no subject)';
-        $messageId = isset($h->message_id) ? $h->message_id : null;
+        $messageId = $h->message_id ?? null;
 
-        // মূল বডি নিয়ে কোট দেখানোর জন্য
-        $bodyInfo = $this->fetchBody($inbox, $id);
+        $bodyInfo = $this->fetchBodyByUid($inbox, (int)$id);
         $origBody = $bodyInfo['is_html'] ? strip_tags($bodyInfo['body']) : $bodyInfo['body'];
         $origBody = trim(preg_replace('/\s+/u', ' ', $origBody));
-        $origBodyShort = Str::limit($origBody, 800, "\n..."); // কোট কমপ্যাক্ট
+        $origBodyShort = Str::limit($origBody, 800, "\n...");
 
         imap_close($inbox);
 
         return view('backend.custom-email.reply-email', [
-            'id' => $id,
-            'to' => $fromEmail, // আমরা প্রেরককেই রিপ্লাই দেব
+            'id'           => (int)$id,
+            'to'           => $fromEmail, // reply to sender
             'fromHeaderTo' => $toEmail,
-            'subject' => Str::startsWith($subject, 'Re:') ? $subject : 'Re: '.$subject,
-            'inReplyTo' => $messageId,
-            'quoted' => "> ".str_replace("\n", "\n> ", $origBodyShort),
+            'subject'      => Str::startsWith($subject, 'Re:') ? $subject : 'Re: '.$subject,
+            'inReplyTo'    => $messageId,
+            'quoted'       => "> ".str_replace("\n", "\n> ", $origBodyShort),
         ]);
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
     public function sendReply(Request $request, $id)
     {
         $data = $request->validate([
-            'to'          => 'required|email',
-            'subject'     => 'required|string|max:255',
-            'body'        => 'required|string',
-            'in_reply_to' => 'nullable|string',
-            'references'  => 'nullable|string',
-            'attachments.*' => 'file|max:5120', // each file max 5MB (adjust as needed)
+            'to'            => 'required|email',
+            'subject'       => 'required|string|max:255',
+            'body'          => 'required|string',
+            'in_reply_to'   => 'nullable|string',
+            'references'    => 'nullable|string',
+            'attachments.*' => 'file|max:5120',
         ]);
 
-        $isHtml = true; // send as HTML email
+        $isHtml = true;
 
         Mail::send([], [], function (\Illuminate\Mail\Message $message) use ($data, $request, $isHtml) {
             $message->to($data['to'])
@@ -534,7 +402,6 @@ class EmailInboxController extends Controller
                 $message->text($data['body']);
             }
 
-            // Add attachments if any
             if ($request->hasFile('attachments')) {
                 foreach ($request->file('attachments') as $file) {
                     if ($file->isValid()) {
@@ -549,7 +416,7 @@ class EmailInboxController extends Controller
                 }
             }
 
-            // Threading headers for Gmail/Outlook
+            // Threading headers
             $symfony = $message->getSymfonyMessage()->getHeaders();
             if (!empty($data['in_reply_to'])) {
                 $symfony->addTextHeader('In-Reply-To', $data['in_reply_to']);
@@ -559,8 +426,7 @@ class EmailInboxController extends Controller
             }
         });
 
+        // $id = UID; show পেজে ফিরে যান
         return redirect()->route('inbox.show', $id)->with('success', 'Reply sent successfully.');
     }
-
-
 }
