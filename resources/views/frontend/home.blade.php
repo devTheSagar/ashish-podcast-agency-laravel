@@ -135,8 +135,8 @@
             <img src="{{ asset('') }}frontend/assets/img/team/1.png" alt="img">
           </div>
           <div class="detail">
-            <h3>john doe</h3>
-            <p>team leader</p>
+            <h3>Rhea</h3>
+            <p>Team Lead</p>
           </div>
         </div>
         <!-- team item end -->
@@ -146,19 +146,19 @@
             <img src="{{ asset('') }}frontend/assets/img/team/2.png" alt="img">
           </div>
           <div class="detail">
-            <h3>john doe</h3>
-            <p>car cleaner</p>
+            <h3>Arnav</h3>
+            <p>Team Lead</p>
           </div>
         </div>
         <!-- team item end -->
         <!-- team item start -->
         <div class="team-item" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
           <div class="img-box">
-            <img src="{{ asset('') }}frontend/assets/img/team/3.png" alt="img">
+            <img src="{{ asset('') }}frontend/assets/img/team/4.png" alt="img">
           </div>
           <div class="detail">
-            <h3>john doe</h3>
-            <p>cleaner</p>
+            <h3>Siya</h3>
+            <p>Team Lead</p>
           </div>
         </div>
         <!-- team item end -->

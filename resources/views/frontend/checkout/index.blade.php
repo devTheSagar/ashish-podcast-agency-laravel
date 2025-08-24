@@ -44,7 +44,7 @@
               <div>
                 <p class="pay-title">Payment instruction</p>
                 <p class="pay-text">
-                  Please pay <strong class="pay-amount">${{ number_format($plan->planPrice, 2) }}</strong> to our <strong>Payoneer</strong> email <span class="pay-kbd pay-amount">payoneeremail@gmail.com</span>
+                  Please pay <strong class="pay-amount">${{ number_format($plan->planPrice, 2) }}</strong> to our <strong>Payoneer</strong> email <span class="pay-kbd pay-amount">ashisbd851@gmail.com</span>
                   and paste the <span class="pay-kbd">Transaction ID</span> below to confirm your order. If you want to use another payment method, please <a href="{{ route('user.message') }}"><u>contact us</u></a>.
                 </p>
               </div>
