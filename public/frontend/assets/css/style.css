@@ -1660,3 +1660,41 @@ body.t-dark .pay-kbd{
   background: var(--bg-color); color: var(--main-color);
   font-weight:700; font-size:20px; text-transform: uppercase;
 }
+
+
+
+
+/* Mobile view: center everything */
+@media (max-width: 767px) {
+  .footer .footer-grid {
+    grid-template-columns: 1fr;   /* stack columns */
+    text-align: center;
+  }
+
+  .footer .footer-col h3 {
+    text-align: center;
+  }
+
+  .footer .footer-col ul {
+    display: inline-block;   /* keeps list compact */
+    text-align: center;      /* center list items */
+    padding: 0;
+    margin: 0 auto;
+  }
+
+  .footer .footer-col ul li {
+    display: block;
+    margin: 4px 0;
+  }
+
+  .footer .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .footer-bottom {
+    text-align: center;
+  }
+}
