@@ -64,7 +64,15 @@
                                             <td>{{ $order->plan->service->serviceName }} {{ $order->plan->planName }} Plan</td>
                                             <td>{{ $order->plan->planPrice }}</td>
                                             <td>{{ $order->created_at->timezone('Asia/Dhaka')->format('d M, Y') }}</td>
-                                            <td>{{ $order->created_at->copy()->addDays($order->plan->planDuration)->timezone('Asia/Dhaka')->format('d M, Y ') }}</td>
+                                            {{-- <td>{{ $order->created_at->copy()->addDays($order->plan->planDuration)->timezone('Asia/Dhaka')->format('d M, Y ') }}</td> --}}
+                                            <td>
+                                              {{ $order->created_at
+                                                    ? $order->created_at->copy()
+                                                        ->addDays((int)($order->plan->planDuration ?? 0))
+                                                        ->timezone('Asia/Dhaka')
+                                                        ->format('d M, Y')
+                                                    : '—' }}
+                                            </td>
                                             <td>
                                                 <form action="{{ route('admin.update-order-status', $order->id) }}" method="POST">
                                                     @csrf

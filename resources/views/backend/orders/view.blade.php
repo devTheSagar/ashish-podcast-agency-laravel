@@ -38,7 +38,8 @@
                                     </tr>
                                     <tr>
                                         <td>Due Date</td>
-                                        <td>{{ $order->created_at->copy()->addDays($order->plan->planDuration)->timezone('Asia/Dhaka')->format('d M, Y ') }}</td>
+                                        {{-- <td>{{ $order->created_at->copy()->addDays($order->plan->planDuration)->timezone('Asia/Dhaka')->format('d M, Y ') }}</td> --}}
+                                        <td>{{ optional($order->created_at)->copy()->addDays((int)($order->plan->planDuration ?? 0))->timezone('Asia/Dhaka')->format('d M, Y') ?? '—' }}</td>
                                     </tr>
                                     <tr>
                                         <td>Order Status</td>
