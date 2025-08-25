@@ -116,7 +116,8 @@
                                 <td>{{ $order->plan->planName }}</td>
                                 <td>${{ $order->plan->planPrice }}</td>
                                 <td>{{ $order->created_at->timezone('Asia/Dhaka')->format('d M, Y') }}</td>
-                                <td>{{ $order->created_at->copy()->addDays($order->plan->planDuration)->timezone('Asia/Dhaka')->format('d M, Y ') }}</td>
+                                {{-- <td>{{ $order->created_at->copy()->addDays($order->plan->planDuration)->timezone('Asia/Dhaka')->format('d M, Y ') }}</td> --}}
+                                <td>{{ $order->created_at?->copy()?->addDays((int)($order->plan?->planDuration ?? 0))?->timezone('Asia/Dhaka')?->format('d M, Y') ?? '—' }}</td>
                                 <td>{{ $order->status }}</td>
                                 <td>
                                     <a href="{{ route('user.order-details', ['id' => $order->id]) }}" type="submit">View Details</a>
