@@ -187,6 +187,6 @@
     <tr><th class="grand-total">Total Amount:</th><td class="grand-total">${{ number_format((float) data_get($order,'plan.planPrice',0), 2) }}</td></tr>
   </table>
 
-  <p class="note">This is a system-generated invoice from PodcastPromotion.online. If you have any questions, please contact support.</p>
+  <p class="note">This is a system-generated invoice from podcastgrowth.agency. If you have any questions, please contact support.</p>
 </body>
 </html>

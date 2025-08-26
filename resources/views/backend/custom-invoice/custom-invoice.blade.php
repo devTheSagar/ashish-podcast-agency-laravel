@@ -161,6 +161,6 @@
         <tr><th class="grand-total">Total Amount:</th><td class="grand-total">${{ number_format(($invoice->price + $invoice->tips), 2) }}</td></tr>
     </table>
     </div>
-    <p class="note"> This is a system-generated invoice from PodcastPromotion.online. If you have any questions, please contact support.</p>
+    <p class="note"> This is a system-generated invoice from podcastgrowth.agency. If you have any questions, please contact support.</p>
 </body>
 </html>
