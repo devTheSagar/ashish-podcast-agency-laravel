@@ -91,13 +91,20 @@
                 </div>
             @endif
         </div>
+        <div style="padding-bottom: 10px;">
+            <p>Please use the verification link sent to your email to log in. If you verified your email from another device, first log in there, then click the button below to go to the home page.</p>
+            <a href="{{ route('user.dashboard') }}" type="button" class="btn" style="background-color: green; text-decoration:none">Go to home</a>
+        </div>
 
-        <p>Didn't get the email?</p>
+        <div style="padding-top: 10px; padding-bottom: 10px;">
+            
+            <p>Didn't get the email?</p>
 
-        <form id="resend-form">
-            <button type="submit" class="btn" id="resend-btn">Resend Verification Email</button>
-            <div id="countdown"></div>
-        </form>
+            <form id="resend-form">
+                <button type="submit" class="btn" id="resend-btn">Resend Verification Email</button>
+                <div id="countdown"></div>
+            </form>
+        </div>
     </div>
 
     <script>
