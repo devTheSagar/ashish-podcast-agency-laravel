@@ -298,6 +298,19 @@ textarea.input-control{
   transform: scaleY(0.9);
   letter-spacing: 2px;
 }
+
+/* Logo image sizing */
+.header .logo a img.site-logo{
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
+@media (max-width: 600px){
+  .header .logo a img.site-logo{
+    height: 36px;
+  }
+}
 .header .logo span{
   font-size: 12px;
   display: block;
