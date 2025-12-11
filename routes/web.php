@@ -21,6 +21,7 @@ use App\Http\Controllers\frontend\AboutUsController as FrontendAboutUsController
 use App\Http\Controllers\frontend\auth\LoginController as UserLoginController;
 use App\Http\Controllers\frontend\auth\RegisterController;
 use App\Http\Controllers\frontend\auth\ResetPasswordController;
+use App\Http\Controllers\backend\CaseStudyController;
 use App\Http\Controllers\frontend\CheckoutController;
 use App\Http\Controllers\frontend\FaqController as FrontendFaqController;
 use App\Http\Controllers\frontend\HomeController;
@@ -284,6 +285,16 @@ Route::prefix('admin')->group(function () {
         Route::get('/inbox/{id}/reply', [EmailInboxController::class, 'replyForm'])->name('inbox.reply.form');
         Route::post('/inbox/{id}/reply', [EmailInboxController::class, 'sendReply'])->name('inbox.reply.send');
 
+
+
+        // case study 
+        Route::get('case-studies', [CaseStudyController::class, 'index'])->name('admin.all-case-studies');
+        Route::get('create-case-studies', [CaseStudyController::class, 'create'])->name('admin.case-studies.add');
+        Route::post('case-studies', [CaseStudyController::class, 'store'])->name('admin.case-studies.store');
+        Route::get('case-studies/{id}/edit', [CaseStudyController::class, 'edit'])->name('admin.case-studies.edit');
+        Route::post('case-studies/{id}/update', [CaseStudyController::class, 'update'])->name('admin.case-studies.update');
+        Route::get('case-studies/{id}/view', [CaseStudyController::class, 'view'])->name('admin.case-studies.view');
+        Route::delete('case-studies/{id}/delete', [CaseStudyController::class, 'destroy'])->name('admin.case-studies.delete');
     });
     
 

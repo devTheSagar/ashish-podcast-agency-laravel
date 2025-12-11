@@ -132,6 +132,22 @@
                             </li>
 
 
+                            <li>
+                                <h3>Case Studies</h3>
+                            </li>
+                            <li class="slide">
+                                <a class="side-menu__item" data-bs-toggle="slide" href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon"  enable-background="new 0 0 24 24" viewBox="0 0 24 24"><path d="M19.8535156,8.1464844l-6-6C13.7597656,2.0526733,13.6326294,2,13.5,2H7C5.3438721,2.0018311,4.0018311,3.3438721,4,5v14c0.0018311,1.6561279,1.3438721,2.9981689,3,3h10c1.6561279-0.0018311,2.9981689-1.3438721,3-3V8.5C20,8.3673706,19.9473267,8.2402344,19.8535156,8.1464844z M14,3.7069702L18.2930298,8H14V3.7069702z M19,19c-0.0014038,1.1040039-0.8959961,1.9985962-2,2H7c-1.1040039-0.0014038-1.9985962-0.8959961-2-2V5c0.0014038-1.1040039,0.8959961-1.9985962,2-2h6v5.5c0,0.0001831,0,0.0003662,0,0.0005493C13.0001831,8.7765503,13.223999,9.0001831,13.5,9H19V19z"/></svg>
+                                    <span class="side-menu__label">Case Studies</span><i class="angle fa fa-angle-right"></i>
+                                </a>
+                                <ul class="slide-menu">
+                                    <li class="side-menu-label1"><a href="javascript:void(0)">Case Studies</a></li>
+                                    <li><a href="{{ route('admin.case-studies.add') }}" class="slide-item">Add Case Study</a></li>
+                                    <li><a href="{{ route('admin.all-case-studies') }}" class="slide-item">All Case Studies</a></li>
+                                </ul>
+                            </li>
+
+
 
 
                             <li>
