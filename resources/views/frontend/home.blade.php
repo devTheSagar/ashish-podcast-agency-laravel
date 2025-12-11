@@ -11,10 +11,10 @@
     <div class="container">
       <div class="grid">
         <div class="home-text">
-          <h1 data-aos="fade-up" data-aos-duration="1000">Need podcast promotion services?</h1>
-          <p data-aos="fade-up" data-aos-duration="1000" data-aos-delay="150">Grow your show with proven strategies that boost downloads, traffic, and audience engagement. We help podcasters reach more listeners, climb the charts, and unlock monetization opportunities.</p>
+          <h1 data-aos="fade-up" data-aos-duration="1000">Grow Your Podcast Downloads & Rankings Fast</h1>
+          <p data-aos="fade-up" data-aos-duration="1000" data-aos-delay="150">Grow your podcast with real listeners, chart rankings, and consistent weekly downloads — powered by our proven Apple & Spotify growth system.</p>
           <div class="btn-wrap" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
-            <a href="#about" class="btn">know more</a>
+            <a href="{{ route('user.message') }}" class="btn">Start Free Trial</a>
           </div>
         </div>
         <div class="home-img">
@@ -44,10 +44,12 @@
         <div class="about-text">
           <div class="section-title">
             <span class="title" data-aos="fade-up" data-aos-duration="600">about us</span>
-            <h2 class="sub-title" data-aos="fade-up" data-aos-duration="600">Promoting Podcasts Since 2015</h2>
+            <h2 class="sub-title" data-aos="fade-up" data-aos-duration="600">Trusted Podcast Growth Experts Since 2015</h2>
           </div>
-          <p data-aos="fade-up" data-aos-duration="600">We’ve been helping podcasters grow their audience, boost downloads, and achieve top chart rankings with proven marketing strategies. Our goal is simple: connect your podcast with the right listeners and help you build long-term success.</p>
-          <p data-aos="fade-up" data-aos-duration="600">With years of experience in podcast promotion, we specialize in increasing visibility, driving engagement, and opening the door to monetization opportunities. Let us take your show to the next level while you focus on creating great content.</p>
+          <p data-aos="fade-up" data-aos-duration="600">We help podcasters grow their audience, boost downloads, and achieve top chart rankings through proven, data-driven marketing strategies. Our goal is simply  connect your podcast with the right listeners and deliver measurable, long-term growth.</p>
+          <p data-aos="fade-up" data-aos-duration="600">With years of experience in podcast promotion, we specialize in increasing visibility, improving listener engagement, and unlocking monetization opportunities. Let us take your show to the next level while you focus on creating great content.</p>
+          <p data-aos="fade-up" data-aos-duration="600">Our team combines podcast SEO, category and keyword research, listener behavior analysis, and platform-specific promotion to give your show an unfair advantage. Whether you are launching a new podcast or trying to revive a stalled show, we build a growth plan tailored to your niche, audience, and goals.</p>
+          <p data-aos="fade-up" data-aos-duration="600">From Apple Podcasts and Spotify to social media and cross-promotion, we make sure your podcast is discovered in the right places by the right people. Every campaign is tracked, optimized, and refined using real performance data  so you always know what’s working and where your growth is coming from.</p>
         </div>
       </div>
     </div>
