@@ -1506,6 +1506,32 @@ body.t-dark .header .logo a img.site-logo{
   margin-top: 4px;
 }
 
+/* Trial button styling */
+.trial-btn { display: inline-block; }
+.trial-btn .trial-btn--primary{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: linear-gradient(90deg, var(--main-color), hsl(var(--hue), calc(var(--saturation) - 10%), calc(var(--lightness) - 10%)));
+  color: var(--text-white);
+  border-radius: 30px;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+}
+.trial-btn .trial-btn--primary:hover{ transform: translateY(-1px); box-shadow: 0 10px 24px rgba(15,23,42,0.16); opacity: .98; }
+.trial-btn .trial-btn--primary:active{ transform: translateY(0); }
+.trial-btn .btn-icon{ font-size: 16px; width: 18px; display:inline-block; text-align:center; }
+
+/* Ensure legible in dark mode */
+body.t-dark .trial-btn .trial-btn--primary{
+  background: linear-gradient(90deg, hsl(var(--hue), 80%, 45%), hsl(var(--hue), 60%, 35%));
+  color: var(--text-white);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
 
 
 

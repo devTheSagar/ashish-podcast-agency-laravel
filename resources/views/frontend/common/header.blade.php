@@ -86,7 +86,14 @@
                   {{-- <li><a href="my-account.html">My Account</a></li> --}}
                 </ul>
               @endguest
-              <li><a href="{{ route('user.message') }}">start free trial</a></li>
+              <li>
+                <div class="trial-btn">
+                  <a href="{{ route('user.message') }}" class="btn trial-btn--primary">
+                    <i class="fas fa-rocket btn-icon" aria-hidden="true"></i>
+                    <span>Start Free Trial</span>
+                  </a>
+                </div>
+              </li>
             </li>
           </ul>
         </nav>
