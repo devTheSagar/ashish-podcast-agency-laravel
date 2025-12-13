@@ -19,7 +19,7 @@
           <div class="card h-100 case-card border-0 shadow-sm">
             <img src="{{ asset($case->caseStudyImage) }}" class="card-img-top" alt="Case Study Image">
             <div class="card-body">
-              <h6 class="card-title">Case Study #{{ $case->id }}</h6>
+              <h6 class="card-title">Case Study #{{ $loop->iteration }}</h6>
               <p class="card-text">{!! \Illuminate\Support\Str::limit(strip_tags($case->caseStudyDetails), 100) !!}</p>
             </div>
             <div class="card-footer bg-white border-0">

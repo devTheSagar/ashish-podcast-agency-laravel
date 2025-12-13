@@ -55,7 +55,7 @@
             {{-- <li><a href="#team">team</a></li> --}}
             <li><a href="{{ route('user.testimonials') }}">testimonials</a></li>
             <li><a href="{{ route('user.case-studies') }}">case studies</a></li>
-            <li><a href="{{ route('user.message') }}">start free trial</a></li>
+            
             <li><a href="{{ route('user.message') }}">contact</a></li>
             <!-- <li><a href="#">account</a></li> -->
             <!-- Dropdown for account -->
@@ -74,7 +74,7 @@
                       @csrf
                   </form>
               </li>
-                </ul>
+              </ul>
               @endauth
 
               @guest
@@ -86,7 +86,7 @@
                   {{-- <li><a href="my-account.html">My Account</a></li> --}}
                 </ul>
               @endguest
-              
+              <li><a href="{{ route('user.message') }}">start free trial</a></li>
             </li>
           </ul>
         </nav>

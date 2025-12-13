@@ -10,7 +10,7 @@
   <div class="container">
     <div class="section-title">
       <span class="title">Case Study</span>
-      <h2 class="sub-title">Case Study #{{ $caseStudy->id }}</h2>
+      <h2 class="sub-title">Case Study #{{ $position ?? 1 }}</h2>
     </div>
 
     <div class="row">
@@ -23,13 +23,13 @@
             </div>
 
             <div class="case-content">
-              <div class="case-meta">Case Study ID: <strong>#{{ $caseStudy->id }}</strong></div>
+              <div class="case-meta">Case Study: <strong>#{{ $position ?? 1 }}</strong></div>
               <div class="case-details mb-3">
                 {!! $caseStudy->caseStudyDetails !!}
               </div>
               <div class="d-flex gap-2">
                 <a href="{{ route('user.case-studies') }}" class="btn btn-outline-secondary">Back</a>
-                <a href="#" class="btn btn-primary">Contact Us</a>
+                <a href="{{ route('user.message') }}" class="btn btn-primary">Contact Us</a>
               </div>
             </div>
           </div>
