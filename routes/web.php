@@ -22,6 +22,7 @@ use App\Http\Controllers\frontend\auth\LoginController as UserLoginController;
 use App\Http\Controllers\frontend\auth\RegisterController;
 use App\Http\Controllers\frontend\auth\ResetPasswordController;
 use App\Http\Controllers\backend\CaseStudyController;
+use App\Http\Controllers\frontend\CaseStudyController as FrontendCaseStudyController;
 use App\Http\Controllers\frontend\CheckoutController;
 use App\Http\Controllers\frontend\FaqController as FrontendFaqController;
 use App\Http\Controllers\frontend\HomeController;
@@ -114,6 +115,9 @@ Route::get('/reset-password/{token}', [ResetPasswordController::class, 'password
 // Handling the Form Submission
 Route::post('/reset-password', [ResetPasswordController::class, 'passwordUpdate'])->name('password.update');
 
+// case studies 
+Route::get('case-studies/{id}', [FrontendCaseStudyController::class, 'show'])->name('user.case-studies.show');
+Route::get('case-studies', [FrontendCaseStudyController::class, 'index'])->name('user.case-studies');
 
 
 // Admin Routes

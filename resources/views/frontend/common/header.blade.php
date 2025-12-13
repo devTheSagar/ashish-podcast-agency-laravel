@@ -54,7 +54,7 @@
             {{-- <li><a href="#pricing">pricing</a></li> --}}
             {{-- <li><a href="#team">team</a></li> --}}
             <li><a href="{{ route('user.testimonials') }}">testimonials</a></li>
-            <li><a href="#">case studies</a></li>
+            <li><a href="{{ route('user.case-studies') }}">case studies</a></li>
             <li><a href="{{ route('user.message') }}">start free trial</a></li>
             <li><a href="{{ route('user.message') }}">contact</a></li>
             <!-- <li><a href="#">account</a></li> -->
