@@ -3,6 +3,39 @@
 @section('title')
     Case Studies
 @endsection
+<style>
+  .case-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr); /* default 1 column for mobile */
+  gap: 20px; /* space between cards */
+}
+
+/* For tablets */
+@media (min-width: 768px) {
+  .case-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 cards per row */
+  }
+}
+
+/* For desktops */
+@media (min-width: 1200px) {
+  .case-grid {
+    grid-template-columns: repeat(4, 1fr); /* 4 cards per row */
+  }
+}
+
+/* Optional: make cards stretch to same height */
+.case-item .card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.case-item .card-body {
+  flex-grow: 1; /* fill vertical space */
+}
+
+</style>
 
 @section('content')
 
